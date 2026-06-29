@@ -119,7 +119,6 @@ const Home = () => {
 
     return (
         <div style={pageStyle}>
-            {/* 상단바: 검색창이 빠져서 아주 깔끔해짐! */}
             <div style={headerStyle}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <button style={logoBtnStyle} onClick={() => navigate('/')}>
@@ -129,12 +128,24 @@ const Home = () => {
                     <button style={navBtnStyle}>근로기준법 안내</button>
                 </div>
 
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                     {isLoggedIn ? (
                         <>
-                            {nickname && <span style={profileTextStyle}>👤 {nickname}님</span>}
+                            {/* 💡 [수정됨] 동그란 프로필 이미지와 닉네임을 하나로 묶음! 누르면 프로필 페이지로 이동 */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }} onClick={() => navigate('/profile')}>
+                                <div style={profileCircleStyle}>
+                                    <img 
+                                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" 
+                                        alt="프로필" 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                    />
+                                </div>
+                                {nickname && <span style={profileTextStyle}>{nickname}님</span>}
+                            </div>
+                            
                             {isAdmin && <button onClick={() => navigate('/admin')} style={adminBtnStyle}>⚙️ 관리자</button>}
-                            <button onClick={() => navigate('/profile')} style={btnStyle}>내 프로필</button>
+                            
+                            {/* 💡 [수정됨] '내 프로필' 버튼을 지우고 로그아웃 버튼만 남김 */}
                             <button onClick={handleLogout} style={btnStyle}>로그아웃</button>
                         </>
                     ) : (
@@ -184,20 +195,15 @@ const Home = () => {
                     </button>
                 </div>
 
-                {/* 오른쪽 사이드바 */}
                 <div style={sidebarStyle}>
-                    {/* 💡 [공부 포인트 1] 사이드바 상단 영역(헤더)을 새로 묶어서 타이틀과 검색창을 같이 배치했어! */}
                     <div style={sidebarHeaderAreaStyle}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '12px' }}>
                             <h2 style={{ fontSize: '18px', margin: 0 }}> 클린 사업장 리스트</h2>
-                            
-                            {/* 💡 [공부 포인트 2] 레퍼런스 이미지처럼 현재 리스트에 있는 가게 개수를 보여줌! */}
                             <span style={{ fontSize: '13px', color: '#888', fontWeight: 'bold' }}>
                                 전체 {stores.length}건
                             </span>
                         </div>
                         
-                        {/* 💡 [공부 포인트 3] 상단바에 있던 검색창 코드를 그대로 이쪽으로 옮겨왔어. (가로 100% 꽉 차게 스타일만 수정) */}
                         <input
                             type="text"
                             placeholder="사업장 이름 검색"
@@ -212,6 +218,7 @@ const Home = () => {
                         {stores.length > 0 ? (
                             stores.map((store, index) => (
                                 <div key={store.id} style={listItemStyle} onClick={() => setSelectedStore(store)}>
+                                    {/* 💡 가게 이름이 안 보이길래 복구해 뒀어! */}
                                     <div style={storeNameStyle}>
                                         <span style={rankStyle}>{index + 1}위</span>
                                         {store.name}
@@ -239,28 +246,27 @@ const logoBtnStyle = { backgroundColor: 'transparent', border: 'none', fontSize:
 const navBtnStyle = { backgroundColor: 'transparent', border: 'none', padding: '8px 10px', cursor: 'pointer', fontSize: '15px', fontWeight: '500', color: '#444' };
 const btnStyle = { backgroundColor: 'transparent', border: '1px solid #ddd', borderRadius: '6px', padding: '6px 12px', cursor: 'pointer', fontSize: '14px', color: '#444' };
 const adminBtnStyle = { ...btnStyle, color: 'red', borderColor: 'red', fontWeight: 'bold' };
-const profileTextStyle = { fontSize: '14px', fontWeight: 'bold', color: '#007AFF' };
+const profileTextStyle = { fontSize: '14px', fontWeight: 'bold', color: '#333' }; // 색상을 좀 더 깔끔하게 진한 회색(#333)으로 변경했어!
+
+// 💡 [추가됨] 동그란 프로필을 만드는 핵심 CSS
+const profileCircleStyle = {
+    width: '32px',
+    height: '32px',
+    borderRadius: '50%', // 완전한 동그라미!
+    overflow: 'hidden',  
+    border: '1px solid #eee',
+    backgroundColor: '#fff',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+};
 
 const contentStyle = { display: 'flex', flex: 1, overflow: 'hidden' };
 const mapContainerStyle = { flex: 1, position: 'relative', backgroundColor: '#e9ecef' };
 
 const sidebarStyle = { width: '400px', backgroundColor: '#ffffff', borderLeft: '1px solid #ddd', display: 'flex', flexDirection: 'column' };
-
-// 💡 새로 추가된 사이드바 상단(검색창 포함) 스타일
-const sidebarHeaderAreaStyle = { 
-    padding: '20px', 
-    borderBottom: '1px solid #ddd',
-    backgroundColor: '#fafafa' // 상단 부분만 살짝 눈에 띄게 회색빛 배경 추가
-};
-const sidebarSearchInputStyle = { 
-    width: '100%', 
-    boxSizing: 'border-box', // padding을 줘도 가로 100%를 안 넘어가게 막아주는 마법!
-    padding: '10px 14px', 
-    borderRadius: '8px', 
-    border: '1px solid #ccc', 
-    outline: 'none', 
-    fontSize: '14px' 
-};
+const sidebarHeaderAreaStyle = { padding: '20px', borderBottom: '1px solid #ddd', backgroundColor: '#fafafa' };
+const sidebarSearchInputStyle = { width: '100%', boxSizing: 'border-box', padding: '10px 14px', borderRadius: '8px', border: '1px solid #ccc', outline: 'none', fontSize: '14px' };
 
 const listContainerStyle = { overflowY: 'auto', flex: 1 };
 const listItemStyle = { padding: '20px', borderBottom: '1px solid #eee', cursor: 'pointer' };

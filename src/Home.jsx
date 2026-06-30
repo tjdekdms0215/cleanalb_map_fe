@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const DUMMY_STORES = [
-    { id: 1, name: '전대 후문 맘스터치', cleanIndex: 98, lat: 35.1764, lng: 126.9135, issue: '클린 사업장!', oxStats: '근로계약서 O (12건) / 주휴수당 O (12건)', reviewCount: 12, frequentJobs: ['홀 서빙'] },
-    { id: 2, name: '정문 ㅇㅇ편의점', cleanIndex: 75, lat: 35.1750, lng: 126.9100, issue: '근로계약서 미교부 의심', oxStats: '근로계약서 X (2건) / 주휴수당 O (5건)', reviewCount: 7, frequentJobs: ['야간 카운터'] },
-    { id: 3, name: '상대 ㅁㅁ카페', cleanIndex: 55, lat: 35.1780, lng: 126.9080, issue: '주휴수당 미지급 의심', oxStats: '근로계약서 O (5건) / 주휴수당 X (4건)', reviewCount: 9, frequentJobs: ['오픈 파트타이머'] },
-    { id: 4, name: '후문 XX식당', cleanIndex: 30, lat: 35.1740, lng: 126.9150, issue: '최저임금 위반 의심', oxStats: '최저임금 X (10건)', reviewCount: 10, frequentJobs: ['주방 보조'] },
-    { id: 5, name: '신장개업 카페 (리뷰없음)', cleanIndex: 0, lat: 35.1790, lng: 126.9110, issue: '리뷰 없음', oxStats: '데이터 없음', reviewCount: 0, frequentJobs: ['알바생 구함'] }
+    { id: 1, name: '전대 후문 맘스터치', cleanIndex: 98, lat: 35.1764, lng: 126.9135, issue: '클린 사업장!', oxStats: '근로계약서 O (12건) / 주휴수당 O (12건)', reviewCount: 12, frequentJobs: ['홀 서빙'], category: '식당', location: '후문' },
+    { id: 2, name: '정문 ㅇㅇ편의점', cleanIndex: 75, lat: 35.1750, lng: 126.9100, issue: '근로계약서 미교부 의심', oxStats: '근로계약서 X (2건) / 주휴수당 O (5건)', reviewCount: 7, frequentJobs: ['야간 카운터'], category: '편의점', location: '정문' },
+    { id: 3, name: '상대 ㅁㅁ카페', cleanIndex: 55, lat: 35.1780, lng: 126.9080, issue: '주휴수당 미지급 의심', oxStats: '근로계약서 O (5건) / 주휴수당 X (4건)', reviewCount: 9, frequentJobs: ['오픈 파트타이머'], category: '카페', location: '상대' },
+    { id: 4, name: '후문 XX식당', cleanIndex: 30, lat: 35.1740, lng: 126.9150, issue: '최저임금 위반 의심', oxStats: '최저임금 X (10건)', reviewCount: 10, frequentJobs: ['주방 보조'], category: '식당', location: '후문' },
+    { id: 5, name: '신장개업 카페 (리뷰없음)', cleanIndex: 0, lat: 35.1790, lng: 126.9110, issue: '리뷰 없음', oxStats: '데이터 없음', reviewCount: 0, frequentJobs: ['알바생 구함'], category: '카페', location: '상대' }
 ];
 
-// 💡 [수정됨] 파스텔톤을 빼고 쨍하고 또렷한 원색 계열로 변경!
 const getCleanGradeInfo = (score) => {
-    if (score >= 80) return { color: '#009900', label: '우수' }; // 🟢 쨍한 초록
-    if (score >= 60) return { color: '#FFC000', label: '보통' }; // 🟡 진한 노랑(글씨도 잘 보이게)
-    if (score >= 40) return { color: '#FF6600', label: '주의' }; // 🟠 쨍한 주황
-    return { color: '#DD0000', label: '위험' };                  // 🔴 쨍한 빨강
+    if (score >= 80) return { color: '#009900', label: '우수' };
+    if (score >= 60) return { color: '#FFC000', label: '보통' };
+    if (score >= 40) return { color: '#FF6600', label: '주의' };
+    return { color: '#DD0000', label: '위험' };
 };
 
 const Home = () => {
@@ -127,7 +126,6 @@ const Home = () => {
                 <div style={mapContainerStyle}>
                     <div id="kakao-map" style={{ width: '100%', height: '100%' }} />
                     
-                    {/* 💡 [수정됨] 하단 범례 색상도 원색으로 통일! */}
                     <div style={legendBoxStyle}>
                         <div style={legendRowStyle}><span style={{...legendDotStyle, backgroundColor: '#009900'}}></span> 80+ 우수</div>
                         <div style={legendRowStyle}><span style={{...legendDotStyle, backgroundColor: '#FFC000'}}></span> 60~79 보통</div>
@@ -195,16 +193,17 @@ const Home = () => {
                             stores.map((store, index) => (
                                 <div key={store.id} style={listItemStyle} onClick={() => setSelectedStore(store)}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        {/* 💡 [수정됨] 이름 왼쪽에 있던 색상 점 삭제 완료! */}
                                         <div style={storeNameStyle}>
-                                            <span style={{...statusDotStyle, backgroundColor: getCleanGradeInfo(store.cleanIndex).color}}></span>
                                             {store.name}
                                         </div>
                                         <div style={{ fontWeight: 'bold', fontSize: '16px', color: getCleanGradeInfo(store.cleanIndex).color }}>
                                             {store.cleanIndex}점
                                         </div>
                                     </div>
+                                    
                                     <div style={storeInfoStyle}>
-                                        {store.issue}
+                                        {store.location} • {store.category}
                                     </div>
                                 </div>
                             ))
@@ -246,19 +245,8 @@ const legendBoxStyle = {
     gap: '10px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
 };
-const legendRowStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '15px',
-    color: '#444',
-    fontWeight: '500'
-};
-const legendDotStyle = {
-    width: '14px',
-    height: '14px',
-    borderRadius: '50%',
-    marginRight: '10px'
-};
+const legendRowStyle = { display: 'flex', alignItems: 'center', fontSize: '15px', color: '#444', fontWeight: '500' };
+const legendDotStyle = { width: '14px', height: '14px', borderRadius: '50%', marginRight: '10px' };
 
 const sidebarStyle = { width: '400px', backgroundColor: '#ffffff', borderLeft: '1px solid #ddd', display: 'flex', flexDirection: 'column' };
 const sidebarHeaderAreaStyle = { padding: '20px', borderBottom: '1px solid #ddd', backgroundColor: '#fafafa' };
@@ -266,7 +254,7 @@ const sidebarSearchInputStyle = { width: '100%', boxSizing: 'border-box', paddin
 const listContainerStyle = { overflowY: 'auto', flex: 1 };
 const listItemStyle = { padding: '20px', borderBottom: '1px solid #eee', cursor: 'pointer' };
 const storeNameStyle = { fontSize: '18px', fontWeight: 'bold', display: 'flex', alignItems: 'center' };
-const storeInfoStyle = { fontSize: '14px', color: '#666', marginTop: '8px' };
+const storeInfoStyle = { fontSize: '14px', color: '#666', marginTop: '8px', fontWeight: '500' };
 const emptyStyle = { padding: '24px', color: '#777', fontSize: '14px', textAlign: 'center' };
 
 const statusDotStyle = { display: 'inline-block', width: '12px', height: '12px', borderRadius: '50%', marginRight: '8px' };

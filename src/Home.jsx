@@ -78,8 +78,8 @@ const Home = () => {
         alert('로그아웃 되었습니다.');
     };
 
-    const handleSearch = (e) => {
-        if (e.key !== 'Enter') return;
+    // 💡 [공부 포인트 1] 엔터를 치거나 돋보기를 눌렀을 때 공통으로 실행될 '검색 실행' 함수를 따로 분리했어!
+    const executeSearch = () => {
         const keyword = searchTerm.trim();
         const validStores = DUMMY_STORES.filter(store => store.reviewCount > 0);
 
@@ -94,6 +94,13 @@ const Home = () => {
             
         setStores(filteredStores);
         setSelectedStore(null);
+    };
+
+    // 기존처럼 엔터키를 눌렀을 때도 검색 실행!
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') {
+            executeSearch();
+        }
     };
 
     return (
@@ -179,21 +186,29 @@ const Home = () => {
                             <h2 style={{ fontSize: '18px', margin: 0 }}> 클린 사업장 리스트</h2>
                             <span style={{ fontSize: '13px', color: '#888', fontWeight: 'bold' }}>전체 {stores.length}건</span>
                         </div>
-                        <input
-                            type="text"
-                            placeholder="사업장 이름 검색"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            onKeyDown={handleSearch}
-                            style={sidebarSearchInputStyle}
-                        />
+                        
+                        {/* 💡 [공부 포인트 2] input과 돋보기(span)를 하나의 div로 묶어줬어! */}
+                        <div style={searchContainerStyle}>
+                            <input
+                                type="text"
+                                placeholder="사업장 이름 및 원하는 조건 검색"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyDown={handleSearch}
+                                style={sidebarSearchInputStyle}
+                            />
+                            {/* 💡 돋보기를 누르면 아까 위에서 분리해둔 executeSearch 함수가 실행됨! */}
+                            <span style={searchIconStyle} onClick={executeSearch}>
+                                🔍
+                            </span>
+                        </div>
                     </div>
+                    
                     <div style={listContainerStyle}>
                         {stores.length > 0 ? (
                             stores.map((store, index) => (
                                 <div key={store.id} style={listItemStyle} onClick={() => setSelectedStore(store)}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        {/* 💡 [수정됨] 이름 왼쪽에 있던 색상 점 삭제 완료! */}
                                         <div style={storeNameStyle}>
                                             {store.name}
                                         </div>
@@ -250,10 +265,31 @@ const legendDotStyle = { width: '14px', height: '14px', borderRadius: '50%', mar
 
 const sidebarStyle = { width: '400px', backgroundColor: '#ffffff', borderLeft: '1px solid #ddd', display: 'flex', flexDirection: 'column' };
 const sidebarHeaderAreaStyle = { padding: '20px', borderBottom: '1px solid #ddd', backgroundColor: '#fafafa' };
-const sidebarSearchInputStyle = { width: '100%', boxSizing: 'border-box', padding: '12px 14px', borderRadius: '8px', border: '1px solid #ccc', outline: 'none', fontSize: '15px' };
+
+// 💡 [수정됨] 검색창 상자와 돋보기 아이콘 스타일 추가
+const searchContainerStyle = { position: 'relative', width: '100%' };
+const sidebarSearchInputStyle = { 
+    width: '100%', 
+    boxSizing: 'border-box', 
+    padding: '12px 40px 12px 14px', // 돋보기 아이콘이 가려지지 않게 오른쪽 여백(padding)을 늘려줬어!
+    borderRadius: '8px', 
+    border: '1px solid #ccc', 
+    outline: 'none', 
+    fontSize: '15px' 
+};
+const searchIconStyle = {
+    position: 'absolute',
+    right: '12px',
+    top: '50%',
+    transform: 'translateY(-50%)', // 정중앙 맞추기 마법
+    cursor: 'pointer',
+    fontSize: '18px'
+};
+
 const listContainerStyle = { overflowY: 'auto', flex: 1 };
 const listItemStyle = { padding: '20px', borderBottom: '1px solid #eee', cursor: 'pointer' };
 const storeNameStyle = { fontSize: '18px', fontWeight: 'bold', display: 'flex', alignItems: 'center' };
+
 const storeInfoStyle = { fontSize: '14px', color: '#666', marginTop: '8px', fontWeight: '500' };
 const emptyStyle = { padding: '24px', color: '#777', fontSize: '14px', textAlign: 'center' };
 

@@ -142,7 +142,7 @@ const Home = () => {
                         <div style={popupStyle}>
                             <button onClick={() => setSelectedStore(null)} style={closeIconBtnStyle}>✕</button>
                             
-                            <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+                            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                                 <span style={{
                                     ...tagStatusStyle, 
                                     backgroundColor: '#fff', 
@@ -153,10 +153,10 @@ const Home = () => {
                                 </span>
                             </div>
 
-                            <h3 style={{ margin: '0 0 6px 0', fontSize: '18px', color: '#333' }}>
+                            <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', color: '#333' }}>
                                 {selectedStore.name}
                             </h3>
-                            <p style={{ margin: '0 0 14px 0', fontSize: '13px', color: '#666' }}>
+                            <p style={{ margin: '0 0 10px 0', fontSize: '12px', color: '#666' }}>
                                 {selectedStore.location} • {selectedStore.category}
                             </p>
 
@@ -180,11 +180,11 @@ const Home = () => {
                                 </div>
                                 <div style={boxRowStyle}>
                                     <span style={boxLabelStyle}>후기 요약:</span>
-                                    <span style={{ lineHeight: '1.4' }}>{selectedStore.reviewSummary}</span>
+                                    <span style={{ lineHeight: '1.3' }}>{selectedStore.reviewSummary}</span>
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '12px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px' }}>
                                 <button onClick={() => navigate(`/detail/${selectedStore.id}`)} style={modernDetailBtnStyle}>
                                     후기 자세히 보기 ➔
                                 </button>
@@ -280,26 +280,25 @@ const emptyStyle = { padding: '24px', color: '#777', fontSize: '14px', textAlign
 
 const fabStyle = { position: 'absolute', top: '24px', left: '24px', width: '100px', height: '40px', backgroundColor: '#ffffff', color: 'black', border: '1px solid #ddd', borderRadius: '8px', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', zIndex: 15 };
 
-// 💡 [수정됨] 팝업창 크기를 340px에서 280px로 줄이고 패딩도 살짝 줄였어!
+// 💡 [수정됨] 패딩을 전체적으로 줄여서 세로 길이를 확 압축시켰어!
 const popupStyle = { 
     position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', 
-    backgroundColor: 'white', padding: '20px', 
+    backgroundColor: 'white', padding: '16px', // 20px -> 16px로 축소
     borderRadius: '0', 
-    boxShadow: '0 8px 30px rgba(0,0,0,0.2)', zIndex: 20, width: '250px', 
+    boxShadow: '0 8px 30px rgba(0,0,0,0.2)', zIndex: 20, width: '280px', 
     display: 'flex', flexDirection: 'column' 
 };
-const closeIconBtnStyle = { position: 'absolute', top: '16px', right: '16px', backgroundColor: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#999' };
-const tagStatusStyle = { padding: '4px 8px', borderRadius: '0', fontSize: '12px', fontWeight: 'bold' };
+const closeIconBtnStyle = { position: 'absolute', top: '12px', right: '12px', backgroundColor: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#999' };
+const tagStatusStyle = { padding: '3px 6px', borderRadius: '0', fontSize: '11px', fontWeight: 'bold' };
 
-// 💡 내부 박스들의 패딩도 16px에서 12px로 줄여서 비율을 맞춤!
-const grayBoxStyle = { backgroundColor: '#f8f9fa', padding: '12px', borderRadius: '0', marginBottom: '8px', border: '1px solid #eee' }; 
-const tintedBoxStyle = { backgroundColor: '#fff8f0', padding: '12px', borderRadius: '0', border: '1px solid #fde7d8' }; 
-const boxRowStyle = { display: 'flex', alignItems: 'flex-start', fontSize: '13px', color: '#333', marginBottom: '6px' };
-const boxLabelStyle = { minWidth: '65px', fontWeight: 'bold', color: '#555' };
+const grayBoxStyle = { backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '0', marginBottom: '6px', border: '1px solid #eee' }; // 마진과 패딩 축소
+const tintedBoxStyle = { backgroundColor: '#fff8f0', padding: '10px', borderRadius: '0', border: '1px solid #fde7d8' }; // 마진과 패딩 축소
+const boxRowStyle = { display: 'flex', alignItems: 'flex-start', fontSize: '12px', color: '#333', marginBottom: '4px' }; // 글자 크기와 줄 간격 축소
+const boxLabelStyle = { minWidth: '60px', fontWeight: 'bold', color: '#555' };
 
 const modernDetailBtnStyle = { 
     backgroundColor: '#f8f9fa', color: '#333', border: '1px solid #ddd', 
-    padding: '8px 14px', 
+    padding: '6px 12px', 
     borderRadius: '0', 
     cursor: 'pointer', fontWeight: 'bold', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px'
 };

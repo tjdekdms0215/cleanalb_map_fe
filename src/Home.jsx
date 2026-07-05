@@ -78,7 +78,6 @@ const Home = () => {
         alert('로그아웃 되었습니다.');
     };
 
-    // 💡 [공부 포인트 1] 엔터를 치거나 돋보기를 눌렀을 때 공통으로 실행될 '검색 실행' 함수를 따로 분리했어!
     const executeSearch = () => {
         const keyword = searchTerm.trim();
         const validStores = DUMMY_STORES.filter(store => store.reviewCount > 0);
@@ -96,7 +95,6 @@ const Home = () => {
         setSelectedStore(null);
     };
 
-    // 기존처럼 엔터키를 눌렀을 때도 검색 실행!
     const handleSearch = (e) => {
         if (e.key === 'Enter') {
             executeSearch();
@@ -182,13 +180,8 @@ const Home = () => {
 
                 <div style={sidebarStyle}>
                     <div style={sidebarHeaderAreaStyle}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '12px' }}>
-                            <h2 style={{ fontSize: '18px', margin: 0 }}> 클린 사업장 리스트</h2>
-                            <span style={{ fontSize: '13px', color: '#888', fontWeight: 'bold' }}>전체 {stores.length}건</span>
-                        </div>
-                        
-                        {/* 💡 [공부 포인트 2] input과 돋보기(span)를 하나의 div로 묶어줬어! */}
-                        <div style={searchContainerStyle}>
+                        {/* 💡 [수정됨] 검색창을 맨 위로 올리고, 아래쪽에 여백(marginBottom)을 줬어! */}
+                        <div style={{ ...searchContainerStyle, marginBottom: '16px' }}>
                             <input
                                 type="text"
                                 placeholder="사업장 이름 및 원하는 조건 검색"
@@ -197,10 +190,15 @@ const Home = () => {
                                 onKeyDown={handleSearch}
                                 style={sidebarSearchInputStyle}
                             />
-                            {/* 💡 돋보기를 누르면 아까 위에서 분리해둔 executeSearch 함수가 실행됨! */}
                             <span style={searchIconStyle} onClick={executeSearch}>
                                 🔍
                             </span>
+                        </div>
+
+                        {/* 💡 [수정됨] 타이틀과 전체 건수를 검색창 아래로 내림! */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                            <h2 style={{ fontSize: '18px', margin: 0 }}>클린 사업장 리스트</h2>
+                            <span style={{ fontSize: '13px', color: '#888', fontWeight: 'bold' }}>전체 {stores.length}건</span>
                         </div>
                     </div>
                     
@@ -246,45 +244,16 @@ const profileCircleStyle = { width: '32px', height: '32px', borderRadius: '50%',
 const contentStyle = { display: 'flex', flex: 1, overflow: 'hidden' };
 const mapContainerStyle = { flex: 1, position: 'relative', backgroundColor: '#e9ecef' };
 
-const legendBoxStyle = {
-    position: 'absolute',
-    bottom: '24px',
-    left: '24px',
-    backgroundColor: 'white',
-    border: '1px solid #ddd',
-    borderRadius: '6px', 
-    padding: '16px',
-    zIndex: 15,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-};
+const legendBoxStyle = { position: 'absolute', bottom: '24px', left: '24px', backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '6px', padding: '16px', zIndex: 15, display: 'flex', flexDirection: 'column', gap: '10px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' };
 const legendRowStyle = { display: 'flex', alignItems: 'center', fontSize: '15px', color: '#444', fontWeight: '500' };
 const legendDotStyle = { width: '14px', height: '14px', borderRadius: '50%', marginRight: '10px' };
 
 const sidebarStyle = { width: '400px', backgroundColor: '#ffffff', borderLeft: '1px solid #ddd', display: 'flex', flexDirection: 'column' };
 const sidebarHeaderAreaStyle = { padding: '20px', borderBottom: '1px solid #ddd', backgroundColor: '#fafafa' };
 
-// 💡 [수정됨] 검색창 상자와 돋보기 아이콘 스타일 추가
 const searchContainerStyle = { position: 'relative', width: '100%' };
-const sidebarSearchInputStyle = { 
-    width: '100%', 
-    boxSizing: 'border-box', 
-    padding: '12px 40px 12px 14px', // 돋보기 아이콘이 가려지지 않게 오른쪽 여백(padding)을 늘려줬어!
-    borderRadius: '8px', 
-    border: '1px solid #ccc', 
-    outline: 'none', 
-    fontSize: '15px' 
-};
-const searchIconStyle = {
-    position: 'absolute',
-    right: '12px',
-    top: '50%',
-    transform: 'translateY(-50%)', // 정중앙 맞추기 마법
-    cursor: 'pointer',
-    fontSize: '18px'
-};
+const sidebarSearchInputStyle = { width: '100%', boxSizing: 'border-box', padding: '12px 40px 12px 14px', borderRadius: '8px', border: '1px solid #ccc', outline: 'none', fontSize: '15px' };
+const searchIconStyle = { position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', fontSize: '18px' };
 
 const listContainerStyle = { overflowY: 'auto', flex: 1 };
 const listItemStyle = { padding: '20px', borderBottom: '1px solid #eee', cursor: 'pointer' };

@@ -178,10 +178,11 @@ const Home = () => {
                     <button onClick={() => navigate('/review/write')} style={fabStyle}>후기 쓰기</button>
                 </div>
 
+                {/* 오른쪽 사이드바 */}
                 <div style={sidebarStyle}>
+                    {/* 💡 상단 회색 영역: 이제 오직 검색창 블록만 깔끔하게 존재함! */}
                     <div style={sidebarHeaderAreaStyle}>
-                        {/* 💡 [수정됨] 검색창을 맨 위로 올리고, 아래쪽에 여백(marginBottom)을 줬어! */}
-                        <div style={{ ...searchContainerStyle, marginBottom: '16px' }}>
+                        <div style={searchContainerStyle}>
                             <input
                                 type="text"
                                 placeholder="사업장 이름 및 원하는 조건 검색"
@@ -194,12 +195,12 @@ const Home = () => {
                                 🔍
                             </span>
                         </div>
+                    </div>
 
-                        {/* 💡 [수정됨] 타이틀과 전체 건수를 검색창 아래로 내림! */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                            <h2 style={{ fontSize: '18px', margin: 0 }}>클린 사업장 리스트</h2>
-                            <span style={{ fontSize: '13px', color: '#888', fontWeight: 'bold' }}>전체 {stores.length}건</span>
-                        </div>
+                    {/* 💡 [수정됨] 회색 블록 아래로 완전히 독립되어 내려온 타이틀과 전체 건수 영역 */}
+                    <div style={listTitleAreaStyle}>
+                        <h2 style={{ fontSize: '18px', margin: 0 }}>클린 사업장 리스트</h2>
+                        <span style={{ fontSize: '13px', color: '#888', fontWeight: 'bold' }}>전체 {stores.length}건</span>
                     </div>
                     
                     <div style={listContainerStyle}>
@@ -250,6 +251,14 @@ const legendDotStyle = { width: '14px', height: '14px', borderRadius: '50%', mar
 
 const sidebarStyle = { width: '400px', backgroundColor: '#ffffff', borderLeft: '1px solid #ddd', display: 'flex', flexDirection: 'column' };
 const sidebarHeaderAreaStyle = { padding: '20px', borderBottom: '1px solid #ddd', backgroundColor: '#fafafa' };
+
+// 💡 새로 추가된 리스트 타이틀 전용 스타일 영역 (회색 블록 바깥이라 하얀 배경에 자연스럽게 녹아듦)
+const listTitleAreaStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    padding: '20px 20px 10px 20px' // 목록과 대칭이 맞도록 좌우 패딩을 똑같이 맞춤
+};
 
 const searchContainerStyle = { position: 'relative', width: '100%' };
 const sidebarSearchInputStyle = { width: '100%', boxSizing: 'border-box', padding: '12px 40px 12px 14px', borderRadius: '8px', border: '1px solid #ccc', outline: 'none', fontSize: '15px' };

@@ -285,7 +285,7 @@ const popupStyle = {
     position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', 
     backgroundColor: 'white', padding: '20px', 
     borderRadius: '0', 
-    boxShadow: '0 8px 30px rgba(0,0,0,0.2)', zIndex: 20, width: '280px', 
+    boxShadow: '0 8px 30px rgba(0,0,0,0.2)', zIndex: 20, width: '250px', 
     display: 'flex', flexDirection: 'column' 
 };
 const closeIconBtnStyle = { position: 'absolute', top: '16px', right: '16px', backgroundColor: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#999' };

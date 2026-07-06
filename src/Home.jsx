@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// 💡 [공부 포인트 1] 백엔드 주소를 한곳에서 관리하는 실무 상수 세팅!
-// 이제 주소가 바뀌면 여기 한 줄만 수정하면 되니까 아주 안전하고 편해져.
 const API_BASE_URL = 'https://cleanalb-map.duckdns.org';
 
 const DUMMY_STORES = [
@@ -41,14 +39,6 @@ const Home = () => {
             if (savedNickname) setNickname(savedNickname);
             if (userRole === 'ADMIN') setIsAdmin(true);
         }
-
-        // 💡 [공부 포인트 2] 나중에 백엔드 API 연동할 자리가 바로 여기야!
-        // 지금은 더미 데이터를 쓰지만, 연동 시기엔 아래 주석처럼 fetch를 쓰게 될 거야.
-        // const fetchStores = async () => {
-        //     const response = await fetch(`${API_BASE_URL}/api/workspaces`);
-        //     const data = await response.json();
-        //     setStores(data);
-        // };
         
         const validStores = DUMMY_STORES
             .filter(store => store.reviewCount > 0)
@@ -100,9 +90,6 @@ const Home = () => {
             return;
         }
         
-        // 💡 [공부 포인트 3] 검색도 나중에 백엔드 주소를 조합해서 요청하게 돼!
-        // fetch(`${API_BASE_URL}/api/workspaces?status=${keyword}`)
-        
         const filteredStores = validStores
             .filter((store) => store.name.includes(keyword))
             .sort((a, b) => b.cleanIndex - a.cleanIndex);
@@ -122,7 +109,10 @@ const Home = () => {
             <div style={headerStyle}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <button style={logoBtnStyle} onClick={() => navigate('/')}>전남대 클린알바맵</button>
-                    <button style={navBtnStyle}>서비스 소개</button>
+                    
+                    {/* 💡 [수정됨] 서비스 소개 버튼에 onClick 이벤트를 추가해서 '/intro'로 넘어가게 설정! */}
+                    <button style={navBtnStyle} onClick={() => navigate('/intro')}>서비스 소개</button>
+                    
                     <button style={navBtnStyle}>근로기준법 안내</button>
                 </div>
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>

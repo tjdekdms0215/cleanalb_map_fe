@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './Home';             // 방금 만든 메인 화면
 import Login from './Login';           // 예전에 만든 카카오 로그인 버튼 화면
 import AuthHandler from './AuthHandler'; // 카카오 로그인 통신 처리 화면
+import ServiceIntro from './ServiceIntro';
 
 const App = () => {
     return (
@@ -20,6 +21,8 @@ const App = () => {
                 
                 {/* 3. 백엔드와 통신하는 카카오 콜백 주소 */}
                 <Route path="/kakao/callback" element={<AuthHandler />} />
+
+                <Route path="/intro" element={<ServiceIntro />} />
             </Routes>
         </BrowserRouter>
     );

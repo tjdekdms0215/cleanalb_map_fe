@@ -13,12 +13,14 @@ const Guide = () => {
                 return (
                     <>
                         <div style={heroStyle}>
-                            <p style={heroSubStyle}>2026년 적용 기준</p>
-                            <h1 style={heroTitleStyle}>2026년 최저시급 10,320원</h1>
-                            <p style={heroDescStyle}>
-                                최저임금 제도는 임금의 최저수준을 정하고, 이 수준 이상을 지급하도록<br />
-                                법으로 강제하는 제도입니다.
-                            </p>
+                            <div style={heroInnerContentStyle}>
+                                <p style={heroSubStyle}>2026년 적용 기준</p>
+                                <h1 style={heroTitleStyle}>2026년 최저시급 10,320원</h1>
+                                <p style={heroDescStyle}>
+                                    최저임금 제도는 임금의 최저수준을 정하고, 이 수준 이상을 지급하도록<br />
+                                    법으로 강제하는 제도입니다.
+                                </p>
+                            </div>
                             
                             <div style={heroStatsGridStyle}>
                                 <div style={heroStatItemStyle}>
@@ -47,7 +49,7 @@ const Guide = () => {
                                     <p style={cardTextStyle}>2026년 적용 최저임금은<br/>시간당 10,320원입니다.</p>
                                     <p style={cardTextStyle}>수습기간 3개월은 최저시급의<br/>90%까지 감액 가능합니다.</p>
                                     <p style={cardSmallTextStyle}>단, 근로계약기간이 1년 미만이거나<br/>단순노무직 종사자에게는 최저시급을 감액할 수 없습니다.</p>
-                                    <p style={{ ...cardTextStyle, fontWeight: 'bold', marginTop: '16px' }}>적용기간: 2026.1.1 ~ 2026.12.31</p>
+                                    <p style={{ ...cardTextStyle, fontWeight: 'bold', marginTop: '20px' }}>적용기간: 2026.1.1 ~ 2026.12.31</p>
                                 </div>
                                 <div style={cardStyle}>
                                     <h3 style={cardTitleStyle}>적용 대상</h3>
@@ -81,7 +83,7 @@ const Guide = () => {
                                     <div style={exampleItemStyle}>
                                         <div style={exampleBadgeStyle}>주급</div>
                                         <div style={exampleDescStyle}>1일 4시간, 1주(5일) 간 총 20시간 근로(개근)하고 주급 217,440원을 받은 경우</div>
-                                        <div>
+                                        <div style={exampleCalcContainerStyle}>
                                             <div style={exampleCalcStyle}>10,030원 {'>'} 217,440원 ÷ 24시간 = 9,060원</div>
                                             <div style={exampleSubCalcStyle}>* 주 15시간 이상 근무하는 경우 주휴수당을 포함하여 계산하여야 함</div>
                                         </div>
@@ -90,7 +92,7 @@ const Guide = () => {
                                     <div style={exampleItemStyle}>
                                         <div style={exampleBadgeStyle}>월급</div>
                                         <div style={exampleDescStyle}>월급 1,893,540원을 받고 1주 40시간(주 5일, 1일 8시간)을 근무한 경우</div>
-                                        <div>
+                                        <div style={exampleCalcContainerStyle}>
                                             <div style={exampleCalcStyle}>10,030원 {'>'} 1,893,540원 ÷ 209시간 = 9,060원</div>
                                             <div style={exampleSubCalcStyle}>* 주 소정근로시간 40시간 ➔ 월환산 기준 시간수 5*200시간</div>
                                         </div>
@@ -106,11 +108,13 @@ const Guide = () => {
                 return (
                     <>
                         <div style={heroStyle}>
-                            <p style={heroSubStyle}>근로기준법 제17조</p>
-                            <h1 style={heroTitleStyle}>함께 써요! 근로계약서!</h1>
-                            <p style={heroDescStyle}>
-                                근로기준법에 따라 사업주와 근로자는 근로계약을 체결해야 합니다.
-                            </p>
+                            <div style={heroInnerContentStyle}>
+                                <p style={heroSubStyle}>근로기준법 제17조</p>
+                                <h1 style={heroTitleStyle}>함께 써요! 근로계약서!</h1>
+                                <p style={heroDescStyle}>
+                                    근로기준법에 따라 사업주와 근로자는 근로계약을 체결해야 합니다.
+                                </p>
+                            </div>
                         </div>
                         <div style={contentAreaStyle}>
                             <h2 style={sectionTitleStyle}>근로계약서란?</h2>
@@ -139,11 +143,13 @@ const Guide = () => {
                 return (
                     <>
                         <div style={heroStyle}>
-                            <p style={heroSubStyle}>근로기준법 제55조</p>
-                            <h1 style={heroTitleStyle}>주휴수당, 알고 받으세요</h1>
-                            <p style={heroDescStyle}>
-                                1주일에 15시간 이상 근무하면 하루치 유급 휴일 임금을 받을 권리가 있습니다.
-                            </p>
+                            <div style={heroInnerContentStyle}>
+                                <p style={heroSubStyle}>근로기준법 제55조</p>
+                                <h1 style={heroTitleStyle}>주휴수당, 알고 받으세요</h1>
+                                <p style={heroDescStyle}>
+                                    1주일에 15시간 이상 근무하면 하루치 유급 휴일 임금을 받을 권리가 있습니다.
+                                </p>
+                            </div>
                         </div>
                         <div style={contentAreaStyle}>
                             <h2 style={sectionTitleStyle}>주휴수당이란?</h2>
@@ -179,12 +185,14 @@ const Guide = () => {
                 return (
                     <>
                         <div style={heroStyle}>
-                            <p style={heroSubStyle}>임금체불 대처법</p>
-                            <h1 style={heroTitleStyle}>월급을 못 받았다면? 신고하세요</h1>
-                            <p style={heroDescStyle}>
-                                임금체불은 명백한 범죄입니다.<br />
-                                3년 이하 징역 또는 3천만원 이하 벌금에 처해집니다.
-                            </p>
+                            <div style={heroInnerContentStyle}>
+                                <p style={heroSubStyle}>임금체불 대처법</p>
+                                <h1 style={heroTitleStyle}>월급을 못 받았다면? 신고하세요</h1>
+                                <p style={heroDescStyle}>
+                                    임금체불은 명백한 범죄입니다.<br />
+                                    3년 이하 징역 또는 3천만원 이하 벌금에 처해집니다.
+                                </p>
+                            </div>
                         </div>
                         <div style={contentAreaStyle}>
                             <h2 style={sectionTitleStyle}>임금체불이란?</h2>
@@ -201,7 +209,7 @@ const Guide = () => {
                                         <p>1. 고용노동부 상담 전화 1350</p>
                                         <p>2. 고용노동부 홈페이지 온라인 진정</p>
                                         <p>3. 가까운 지방고용노동청 방문</p>
-                                        <p style={{ marginTop: '12px', fontSize: '13px', color: '#666' }}>
+                                        <p style={{ marginTop: '16px', fontSize: '13px', color: '#666' }}>
                                             4. 대한법률구조공단 법률 지원 신고 시 필요 서류 :<br/>
                                             근로계약서, 급여 명세서, 통장내역, 출퇴근 기록 등
                                         </p>
@@ -213,7 +221,7 @@ const Guide = () => {
                                         <p>1단계: 사업주에게 서면으로 지급 요청</p>
                                         <p>2단계: 내용증명 발송</p>
                                         <p>3단계: 고용노동부 임금체불 진정 신고</p>
-                                        <p style={{ marginTop: '12px', fontSize: '13px', color: '#666' }}>
+                                        <p style={{ marginTop: '16px', fontSize: '13px', color: '#666' }}>
                                             4단계: 검찰 고소 퇴직 후 3년 이내 청구 가능 소액 체불은<br/>소액심판제도 활용 가능
                                         </p>
                                     </div>
@@ -247,6 +255,7 @@ const Guide = () => {
         <div style={pageWrapperStyle}>
             <div style={containerStyle}>
                 
+                {/* 헤더 영역 */}
                 <div style={headerStyle}>
                     <div style={logoStyle} onClick={() => navigate('/')}>
                         전남대 클린알바맵
@@ -258,27 +267,34 @@ const Guide = () => {
                     </div>
                 </div>
 
+                {/* 탭 메뉴 영역 */}
                 <div style={tabsContainerStyle}>
-                    {tabs.map((tab) => (
-                        <div 
-                            key={tab} 
-                            style={tab === activeTab ? activeTabStyle : inactiveTabStyle}
-                            onClick={() => setActiveTab(tab)}
-                        >
-                            {tab}
-                        </div>
-                    ))}
+                    <div style={tabsInnerStyle}>
+                        {tabs.map((tab) => (
+                            <div 
+                                key={tab} 
+                                style={tab === activeTab ? activeTabStyle : inactiveTabStyle}
+                                onClick={() => setActiveTab(tab)}
+                            >
+                                {tab}
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
+                {/* 메인 콘텐츠 영역 */}
                 {renderContent()}
 
+                {/* 공통 푸터(CTA) 영역 */}
                 <div style={footerStyle}>
-                    <span style={{ color: '#888', fontSize: '13px' }}>
-                        자세한 사항은 국가법령정보센터에서 확인하실 수 있습니다.
-                    </span>
-                    <button style={footerBtnStyle}>
-                        {activeTab === '2026 최저시급' ? '최저임금법 확인하기' : '근로기준법 확인하기'}
-                    </button>
+                    <div style={footerInnerStyle}>
+                        <span style={{ color: '#888', fontSize: '14px' }}>
+                            자세한 사항은 국가법령정보센터에서 확인하실 수 있습니다.
+                        </span>
+                        <button style={footerBtnStyle}>
+                            {activeTab === '2026 최저시급' ? '최저임금법 확인하기' : '근로기준법 확인하기'}
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -308,95 +324,95 @@ const faqData = {
 
 // --- 스타일 영역 ---
 
-/* 전체 배경 및 컨테이너 (여백 및 너비 최적화) */
+/* 💡 여백 제거 및 풀스크린 꽉 차게 설정 */
 const pageWrapperStyle = {
     width: '100vw',
     minHeight: '100vh',
-    backgroundColor: '#4b4b4b',
+    backgroundColor: '#ffffff', // 회색 배경 제거하고 전체 화이트로
     display: 'flex',
-    justifyContent: 'center',
-    padding: '20px 20px', // 위아래 여백을 줄이고 화면이 작을 때를 대비해 좌우 여백 추가
-    boxSizing: 'border-box',
+    flexDirection: 'column',
+    margin: 0,
+    padding: 0,
     fontFamily: 'sans-serif'
 };
 const containerStyle = {
-    width: '100%',
-    maxWidth: '860px', // 노트북 13~15인치에 딱 맞는 너비로 축소!
-    backgroundColor: '#ffffff',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+    width: '100%', // maxWidth 제거하여 화면 끝까지 확장
     display: 'flex',
     flexDirection: 'column',
-    borderRadius: '8px',
-    overflow: 'hidden'
+    flex: 1
 };
 
-/* 헤더 및 탭 영역 (패딩 축소) */
-const headerStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '60px', padding: '0 24px', borderBottom: '1px solid #eee' };
-const logoStyle = { fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', color: '#111' };
-const headerRightStyle = { display: 'flex', gap: '12px', alignItems: 'center' };
-const navBtnStyle = { background: 'none', border: 'none', color: '#555', fontSize: '13px', cursor: 'pointer' };
-const iconBtnStyle = { background: 'none', border: 'none', color: '#555', fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' };
+/* 헤더 및 탭 영역 (양옆 여백을 vw로 유연하게) */
+const headerStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '64px', padding: '0 6vw', borderBottom: '1px solid #eee' };
+const logoStyle = { fontSize: '18px', fontWeight: 'bold', cursor: 'pointer', color: '#111' };
+const headerRightStyle = { display: 'flex', gap: '16px', alignItems: 'center' };
+const navBtnStyle = { background: 'none', border: 'none', color: '#555', fontSize: '14px', cursor: 'pointer' };
+const iconBtnStyle = { background: 'none', border: 'none', color: '#555', fontSize: '14px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' };
 
-const tabsContainerStyle = { display: 'flex', padding: '0 24px', borderBottom: '1px solid #eee' };
-const tabBaseStyle = { padding: '16px 20px', fontSize: '14px', cursor: 'pointer', position: 'relative' };
+const tabsContainerStyle = { display: 'flex', borderBottom: '1px solid #eee' };
+const tabsInnerStyle = { display: 'flex', padding: '0 6vw', width: '100%' };
+const tabBaseStyle = { padding: '20px 24px', fontSize: '15px', cursor: 'pointer', position: 'relative' };
 const activeTabStyle = { ...tabBaseStyle, color: '#4063ff', fontWeight: 'bold', borderBottom: '3px solid #4063ff' };
 const inactiveTabStyle = { ...tabBaseStyle, color: '#888' };
 
-/* 히어로 영역 (패딩 축소) */
-const heroStyle = { backgroundColor: '#4063ff', color: '#fff', padding: '40px 24px 0 24px', display: 'flex', flexDirection: 'column' };
-const heroSubStyle = { fontSize: '12px', opacity: 0.8, marginBottom: '8px' };
-const heroTitleStyle = { fontSize: '28px', fontWeight: 'bold', margin: '0 0 12px 0' };
-const heroDescStyle = { fontSize: '14px', lineHeight: '1.5', opacity: 0.9, margin: '0 0 32px 0' };
+/* 히어로 영역 (가로 꽉 차게) */
+const heroStyle = { backgroundColor: '#4063ff', color: '#fff', display: 'flex', flexDirection: 'column' };
+const heroInnerContentStyle = { padding: '60px 6vw 40px 6vw' };
+const heroSubStyle = { fontSize: '14px', opacity: 0.8, marginBottom: '10px' };
+const heroTitleStyle = { fontSize: '32px', fontWeight: 'bold', margin: '0 0 16px 0' };
+const heroDescStyle = { fontSize: '16px', lineHeight: '1.6', opacity: 0.9, margin: 0 };
 
-/* 히어로 통계 그리드 */
-const heroStatsGridStyle = { display: 'flex', borderTop: '1px solid rgba(255,255,255,0.2)', margin: '0 -24px' };
-const heroStatItemStyle = { flex: 1, padding: '20px 0', textAlign: 'center', borderRight: '1px solid rgba(255,255,255,0.2)' };
-const heroStatLabelStyle = { fontSize: '12px', opacity: 0.8, marginBottom: '6px' };
-const heroStatValueStyle = { fontSize: '18px', fontWeight: 'bold' };
+/* 히어로 통계 그리드 (끝에서 끝까지 꽉 차게 분배) */
+const heroStatsGridStyle = { display: 'flex', borderTop: '1px solid rgba(255,255,255,0.2)', width: '100%' };
+const heroStatItemStyle = { flex: 1, padding: '28px 0', textAlign: 'center', borderRight: '1px solid rgba(255,255,255,0.2)' };
+const heroStatLabelStyle = { fontSize: '14px', opacity: 0.8, marginBottom: '8px' };
+const heroStatValueStyle = { fontSize: '22px', fontWeight: 'bold' };
 
 /* 메인 콘텐츠 공통 영역 */
-const contentAreaStyle = { padding: '40px 24px', backgroundColor: '#fff' };
-const sectionStyle = { marginTop: '48px' };
-const sectionTitleStyle = { fontSize: '18px', fontWeight: 'bold', color: '#111', margin: '0 0 10px 0' };
-const sectionDescStyle = { fontSize: '13px', color: '#666', marginBottom: '20px' };
-const paragraphStyle = { fontSize: '13px', color: '#444', lineHeight: '1.6', margin: '0 0 32px 0' };
+const contentAreaStyle = { padding: '60px 6vw', backgroundColor: '#fff', flex: 1 };
+const sectionStyle = { marginTop: '60px' };
+const sectionTitleStyle = { fontSize: '22px', fontWeight: 'bold', color: '#111', margin: '0 0 12px 0' };
+const sectionDescStyle = { fontSize: '15px', color: '#666', marginBottom: '24px' };
+const paragraphStyle = { fontSize: '15px', color: '#444', lineHeight: '1.7', margin: '0 0 40px 0' };
 
-/* 그리드 및 카드 스타일 (너비에 맞춰 찌그러지지 않게 grid 활용) */
-const threeColGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '32px' };
-const twoColGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '32px' };
-const cardStyle = { backgroundColor: '#fafafa', padding: '24px 20px', textAlign: 'center', border: '1px solid #f0f0f0' };
-const cardTitleStyle = { fontSize: '15px', fontWeight: 'bold', color: '#111', margin: '0 0 16px 0' };
-const cardTextStyle = { fontSize: '13px', color: '#333', lineHeight: '1.5', margin: '0 0 12px 0' };
-const cardSmallTextStyle = { fontSize: '11px', color: '#888', lineHeight: '1.5', margin: 0 };
+/* 그리드 및 카드 스타일 (화면이 넓어졌으므로 쾌적하게 배치) */
+const threeColGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', marginBottom: '40px' };
+const twoColGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px', marginBottom: '40px' };
+const cardStyle = { backgroundColor: '#fafafa', padding: '32px 24px', textAlign: 'center', border: '1px solid #f0f0f0' };
+const cardTitleStyle = { fontSize: '18px', fontWeight: 'bold', color: '#111', margin: '0 0 20px 0' };
+const cardTextStyle = { fontSize: '14px', color: '#333', lineHeight: '1.6', margin: '0 0 16px 0' };
+const cardSmallTextStyle = { fontSize: '12px', color: '#888', lineHeight: '1.6', margin: 0 };
 
 /* 제17조 박스 스타일 */
-const infoBoxStyle = { backgroundColor: '#f8fafc', padding: '24px', borderRadius: '8px', marginBottom: '32px' };
-const infoBoxTitleStyle = { fontSize: '15px', fontWeight: 'bold', margin: '0 0 10px 0', color: '#111' };
-const infoBoxTextStyle = { fontSize: '13px', color: '#444', marginBottom: '16px' };
-const infoBoxListStyle = { listStyle: 'none', padding: 0, margin: 0, fontSize: '12px', color: '#555', display: 'flex', flexWrap: 'wrap', gap: '10px 20px' };
+const infoBoxStyle = { backgroundColor: '#f8fafc', padding: '32px', border: '1px solid #eee', marginBottom: '40px' };
+const infoBoxTitleStyle = { fontSize: '16px', fontWeight: 'bold', margin: '0 0 12px 0', color: '#111' };
+const infoBoxTextStyle = { fontSize: '14px', color: '#444', marginBottom: '24px' };
+const infoBoxListStyle = { listStyle: 'none', padding: 0, margin: 0, fontSize: '14px', color: '#555', display: 'flex', flexWrap: 'wrap', gap: '12px 24px', lineHeight: '1.6' };
 
 /* 리스트 스타일 */
-const centerListStyle = { fontSize: '13px', color: '#444', lineHeight: '1.6' };
-const bulletListStyle = { fontSize: '13px', color: '#444', lineHeight: '1.6', textAlign: 'left', margin: 0, paddingLeft: '20px' };
+const centerListStyle = { fontSize: '14px', color: '#444', lineHeight: '1.8' };
+const bulletListStyle = { fontSize: '14px', color: '#444', lineHeight: '1.8', textAlign: 'left', margin: 0, paddingLeft: '20px' };
 
 /* 최저임금 계산 예시 리스트 */
 const exampleListStyle = { display: 'flex', flexDirection: 'column', gap: '0' };
-const exampleItemStyle = { display: 'flex', alignItems: 'center', padding: '20px 0', borderBottom: '1px solid #eee' };
-const exampleBadgeStyle = { backgroundColor: '#a3a3a3', color: '#fff', width: '36px', height: '36px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '12px', fontWeight: 'bold', flexShrink: 0, marginRight: '16px' };
-const exampleDescStyle = { flex: 1, fontSize: '12px', color: '#777' };
-const exampleCalcStyle = { flex: 1.2, fontSize: '13px', fontWeight: 'bold', color: '#333' };
-const exampleSubCalcStyle = { fontSize: '11px', color: '#999', marginTop: '4px' };
-const exampleWarningStyle = { width: '90px', textAlign: 'right', fontSize: '12px', fontWeight: 'bold', color: '#e11d48' };
+const exampleItemStyle = { display: 'flex', alignItems: 'center', padding: '24px 0', borderBottom: '1px solid #eee' };
+const exampleBadgeStyle = { backgroundColor: '#a3a3a3', color: '#fff', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '14px', fontWeight: 'bold', flexShrink: 0, marginRight: '24px' };
+const exampleDescStyle = { flex: 1.5, fontSize: '14px', color: '#555' };
+const exampleCalcContainerStyle = { flex: 2 }; // 계산식 영역 너비 확보
+const exampleCalcStyle = { fontSize: '15px', fontWeight: 'bold', color: '#333' };
+const exampleSubCalcStyle = { fontSize: '12px', color: '#999', marginTop: '6px' };
+const exampleWarningStyle = { width: '120px', textAlign: 'right', fontSize: '14px', fontWeight: 'bold', color: '#e11d48' };
 
 /* FAQ 영역 */
-const faqSectionStyle = { marginTop: '48px' };
-const faqHeaderStyle = { fontSize: '16px', fontWeight: 'bold', margin: '0 0 12px 0', color: '#111' };
-const faqItemStyle = { borderBottom: '1px solid #eee', padding: '16px 0' };
-const faqQuestionStyle = { display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 'bold', color: '#333', marginBottom: '8px' };
-const faqAnswerStyle = { fontSize: '12px', color: '#666', lineHeight: '1.5' };
+const faqSectionStyle = { marginTop: '60px' };
+const faqHeaderStyle = { fontSize: '18px', fontWeight: 'bold', margin: '0 0 16px 0', color: '#111' };
+const faqItemStyle = { borderBottom: '1px solid #eee', padding: '24px 0' };
+const faqQuestionStyle = { display: 'flex', justifyContent: 'space-between', fontSize: '15px', fontWeight: 'bold', color: '#333', marginBottom: '12px' };
+const faqAnswerStyle = { fontSize: '14px', color: '#666', lineHeight: '1.6' };
 
 /* 하단 푸터 */
-const footerStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '24px', borderTop: '1px solid #eee', backgroundColor: '#fff' };
-const footerBtnStyle = { backgroundColor: '#f1f5f9', color: '#555', border: 'none', padding: '10px 20px', borderRadius: '6px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' };
+const footerStyle = { borderTop: '1px solid #eee', backgroundColor: '#fff' };
+const footerInnerStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '32px 6vw' };
+const footerBtnStyle = { backgroundColor: '#f1f5f9', color: '#555', border: 'none', padding: '12px 24px', borderRadius: '6px', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer' };
 
 export default Guide;

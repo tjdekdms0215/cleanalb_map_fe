@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// 💡 [공부 포인트 1] 백엔드 주소를 한곳에서 관리하는 실무 상수 세팅!
+// 이제 주소가 바뀌면 여기 한 줄만 수정하면 되니까 아주 안전하고 편해져.
+const API_BASE_URL = 'https://cleanalb-map.duckdns.org';
+
 const DUMMY_STORES = [
     { id: 1, name: '전대 후문 맘스터치', cleanIndex: 98, lat: 35.1764, lng: 126.9135, issue: '클린 사업장!', oxStats: '근로계약서 O (12건) / 주휴수당 O (12건)', reviewCount: 12, reviewSummary: '사장님이 친절하고 주휴수당을 칼같이 챙겨주십니다.', category: '식당', location: '후문' },
     { id: 2, name: '정문 ㅇㅇ편의점', cleanIndex: 75, lat: 35.1750, lng: 126.9100, issue: '근로계약서 미교부 의심', oxStats: '근로계약서 X (2건) / 주휴수당 O (5건)', reviewCount: 7, reviewSummary: '알바 강도는 낮지만 근로계약서 작성을 미루는 경향이 있어요.', category: '편의점', location: '정문' },
@@ -38,6 +42,14 @@ const Home = () => {
             if (userRole === 'ADMIN') setIsAdmin(true);
         }
 
+        // 💡 [공부 포인트 2] 나중에 백엔드 API 연동할 자리가 바로 여기야!
+        // 지금은 더미 데이터를 쓰지만, 연동 시기엔 아래 주석처럼 fetch를 쓰게 될 거야.
+        // const fetchStores = async () => {
+        //     const response = await fetch(`${API_BASE_URL}/api/workspaces`);
+        //     const data = await response.json();
+        //     setStores(data);
+        // };
+        
         const validStores = DUMMY_STORES
             .filter(store => store.reviewCount > 0)
             .sort((a, b) => b.cleanIndex - a.cleanIndex);
@@ -87,6 +99,10 @@ const Home = () => {
             setSelectedStore(null);
             return;
         }
+        
+        // 💡 [공부 포인트 3] 검색도 나중에 백엔드 주소를 조합해서 요청하게 돼!
+        // fetch(`${API_BASE_URL}/api/workspaces?status=${keyword}`)
+        
         const filteredStores = validStores
             .filter((store) => store.name.includes(keyword))
             .sort((a, b) => b.cleanIndex - a.cleanIndex);
@@ -280,27 +296,15 @@ const emptyStyle = { padding: '24px', color: '#777', fontSize: '14px', textAlign
 
 const fabStyle = { position: 'absolute', top: '24px', left: '24px', width: '100px', height: '40px', backgroundColor: '#ffffff', color: 'black', border: '1px solid #ddd', borderRadius: '8px', cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', zIndex: 15 };
 
-// 💡 [수정됨] 패딩을 전체적으로 줄여서 세로 길이를 확 압축시켰어!
-const popupStyle = { 
-    position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', 
-    backgroundColor: 'white', padding: '16px', // 20px -> 16px로 축소
-    borderRadius: '0', 
-    boxShadow: '0 8px 30px rgba(0,0,0,0.2)', zIndex: 20, width: '280px', 
-    display: 'flex', flexDirection: 'column' 
-};
+const popupStyle = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', padding: '16px', borderRadius: '0', boxShadow: '0 8px 30px rgba(0,0,0,0.2)', zIndex: 20, width: '280px', display: 'flex', flexDirection: 'column' };
 const closeIconBtnStyle = { position: 'absolute', top: '12px', right: '12px', backgroundColor: 'transparent', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#999' };
 const tagStatusStyle = { padding: '3px 6px', borderRadius: '0', fontSize: '11px', fontWeight: 'bold' };
 
-const grayBoxStyle = { backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '0', marginBottom: '6px', border: '1px solid #eee' }; // 마진과 패딩 축소
-const tintedBoxStyle = { backgroundColor: '#fff8f0', padding: '10px', borderRadius: '0', border: '1px solid #fde7d8' }; // 마진과 패딩 축소
-const boxRowStyle = { display: 'flex', alignItems: 'flex-start', fontSize: '12px', color: '#333', marginBottom: '4px' }; // 글자 크기와 줄 간격 축소
+const grayBoxStyle = { backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '0', marginBottom: '6px', border: '1px solid #eee' }; 
+const tintedBoxStyle = { backgroundColor: '#fff8f0', padding: '10px', borderRadius: '0', border: '1px solid #fde7d8' }; 
+const boxRowStyle = { display: 'flex', alignItems: 'flex-start', fontSize: '12px', color: '#333', marginBottom: '4px' }; 
 const boxLabelStyle = { minWidth: '60px', fontWeight: 'bold', color: '#555' };
 
-const modernDetailBtnStyle = { 
-    backgroundColor: '#f8f9fa', color: '#333', border: '1px solid #ddd', 
-    padding: '6px 12px', 
-    borderRadius: '0', 
-    cursor: 'pointer', fontWeight: 'bold', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px'
-};
+const modernDetailBtnStyle = { backgroundColor: '#f8f9fa', color: '#333', border: '1px solid #ddd', padding: '6px 12px', borderRadius: '0', cursor: 'pointer', fontWeight: 'bold', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px' };
 
 export default Home;

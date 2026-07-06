@@ -12,7 +12,7 @@ const AuthHandler = () => {
                 try {
                     console.log("kakaoLogin code:", code);
 
-                    const response = await fetch(`http://15.134.207.179:8080/api/kakao/callback?code=${code}`);
+                    const response = await fetch(`https://cleanalb-map.duckdns.org/api/kakao/callback?code=${code}`);
                     const data = await response.json();
 
                     console.log("backend response success", data);

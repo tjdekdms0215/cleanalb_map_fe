@@ -768,9 +768,9 @@ const btnStyle = {
 };
 
 const kakaoLoginBtnStyle = {
-    height: '42px',
-    minWidth: '168px',
-    padding: '0 20px',
+    height: '38px',
+    minWidth: '154px',
+    padding: '0 16px',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -778,7 +778,7 @@ const kakaoLoginBtnStyle = {
     backgroundColor: '#FEE500',
     color: '#191919',
     border: 'none',
-    borderRadius: '12px',
+    borderRadius: '10px',
     cursor: 'pointer',
     boxSizing: 'border-box',
     fontFamily: 'inherit',
@@ -1048,15 +1048,15 @@ const popupStyle = {
 
 const popupCloseBtnStyle = {
     position: 'absolute',
-    top: '12px',
-    right: '12px',
-    width: '32px',
-    height: '32px',
+    top: '9px',
+    right: '9px',
+    width: '27px',
+    height: '27px',
     padding: 0,
     backgroundColor: 'transparent',
     border: 'none',
     color: '#8a8a8a',
-    fontSize: '20px',
+    fontSize: '17px',
     lineHeight: 1,
     cursor: 'pointer'
 };
@@ -1064,31 +1064,31 @@ const popupCloseBtnStyle = {
 const statusBadgeRowStyle = {
     display: 'flex',
     alignItems: 'center',
-    minHeight: '32px',
-    marginBottom: '14px',
-    paddingRight: '38px'
+    minHeight: '26px',
+    marginBottom: '8px',
+    paddingRight: '32px'
 };
 
 const tagStatusStyle = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: '48px',
-    padding: '7px 12px',
+    minWidth: '42px',
+    padding: '4px 9px',
     backgroundColor: 'rgba(255,255,255,0.72)',
     border: 'none',
     borderRadius: 0,
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '900'
 };
 
 const popupStoreNameStyle = {
-    margin: '0 0 5px',
-    paddingRight: '20px',
+    margin: '0 0 3px',
+    paddingRight: '18px',
     color: '#2d2d2d',
-    fontSize: '21px',
+    fontSize: '18px',
     fontWeight: '900',
-    lineHeight: '1.35',
+    lineHeight: '1.25',
     wordBreak: 'keep-all'
 };
 
@@ -1096,10 +1096,10 @@ const popupMetaStyle = {
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: '6px',
-    margin: '0 0 16px',
+    gap: '4px',
+    margin: '0 0 10px',
     color: '#666666',
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '600'
 };
 
@@ -1110,9 +1110,9 @@ const metaDividerStyle = {
 const grayBoxStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: '9px',
-    marginBottom: '10px',
-    padding: '14px',
+    gap: '6px',
+    marginBottom: '8px',
+    padding: '10px 11px',
     backgroundColor: 'rgba(255,255,255,0.72)',
     border: 'none',
     borderRadius: 0
@@ -1121,9 +1121,9 @@ const grayBoxStyle = {
 const tintedBoxStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: '9px',
-    marginBottom: '14px',
-    padding: '14px',
+    gap: '6px',
+    marginBottom: '10px',
+    padding: '10px 11px',
     backgroundColor: 'rgba(255,255,255,0.48)',
     border: 'none',
     borderRadius: 0
@@ -1132,29 +1132,30 @@ const tintedBoxStyle = {
 const boxRowStyle = {
     display: 'flex',
     alignItems: 'flex-start',
-    gap: '10px',
+    gap: '7px',
     color: '#333333',
-    fontSize: '13px',
-    lineHeight: '1.5'
+    fontSize: '12px',
+    lineHeight: '1.4'
 };
 
 const boxLabelStyle = {
-    minWidth: '68px',
+    minWidth: '61px',
     color: '#555555',
     fontWeight: '900',
     flexShrink: 0
 };
 
 const boxValueStyle = {
-    fontSize: '14px',
+    fontSize: '13px',
     fontWeight: '900'
 };
 
 const boxTextStyle = {
     minWidth: 0,
     color: '#333333',
+    fontSize: '12px',
     fontWeight: '500',
-    lineHeight: '1.5',
+    lineHeight: '1.4',
     wordBreak: 'keep-all'
 };
 

@@ -3,15 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = 'https://cleanalb-map.duckdns.org';
 
-const DUMMY_STORES = [
-    { id: 1, name: '전대 후문 맘스터치', cleanIndex: 98, lat: 35.1764, lng: 126.9135, issue: '클린 사업장!', oxStats: '근로계약서 O (12건) / 주휴수당 O (12건)', reviewCount: 12, reviewSummary: '사장님이 친절하고 주휴수당을 칼같이 챙겨주십니다.', category: '식당', location: '후문' },
-    { id: 2, name: '정문 ㅇㅇ편의점', cleanIndex: 75, lat: 35.1750, lng: 126.9100, issue: '근로계약서 미교부 의심', oxStats: '근로계약서 X (2건) / 주휴수당 O (5건)', reviewCount: 7, reviewSummary: '알바 강도는 낮지만 근로계약서 작성을 미루는 경향이 있어요.', category: '편의점', location: '정문' },
-    { id: 3, name: '상대 ㅁㅁ카페', cleanIndex: 55, lat: 35.1780, lng: 126.9080, issue: '주휴수당 미지급 의심', oxStats: '근로계약서 O (5건) / 주휴수당 X (4건)', reviewCount: 9, reviewSummary: '일은 재밌는데 주휴수당 챙겨 받기가 눈치 보입니다.', category: '카페', location: '상대' },
-    { id: 4, name: '후문 XX식당', cleanIndex: 30, lat: 35.1740, lng: 126.9150, issue: '최저임금 위반 의심', oxStats: '최저임금 X (10건)', reviewCount: 10, reviewSummary: '수습 기간 핑계로 최저시급을 안 맞춰줍니다. 주의하세요!', category: '식당', location: '후문' },
-    { id: 5, name: '신장개업 카페 (리뷰없음)', cleanIndex: 0, lat: 35.1790, lng: 126.9110, issue: '리뷰 없음', oxStats: '데이터 없음', reviewCount: 0, reviewSummary: '', category: '카페', location: '상대' }
-];
+// 💡 더미 데이터(DUMMY_STORES)는 이제 안녕! 서버에서 직접 받아올 거니까 삭제했어.
 
 const getCleanGradeInfo = (score) => {
+    // 혹시 점수가 null이거나 없을 때를 대비한 방어 코드
+    if (score === null || score === undefined) return { color: '#999999', label: '미정' }; 
     if (score >= 80) return { color: '#009900', label: '우수' };
     if (score >= 60) return { color: '#FFC000', label: '보통' };
     if (score >= 40) return { color: '#FF6600', label: '주의' };
@@ -28,9 +24,32 @@ const Home = () => {
     const [stores, setStores] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedStore, setSelectedStore] = useState(null);
-
     const [showIntroModal, setShowIntroModal] = useState(false);
 
+    // 💡 [API 연동 핵심] 사업장 목록 및 검색 데이터를 백엔드에서 가져오는 함수
+    const fetchWorkspaces = async (keyword = '') => {
+        try {
+            // 키워드가 있으면 검색 API로, 없으면 전체 목록 API로 호출
+            // (백엔드 파라미터명에 따라 ?keyword= 또는 ?name= 등으로 수정될 수 있어)
+            const url = keyword 
+                ? `${API_BASE_URL}/workspaces?keyword=${encodeURIComponent(keyword)}` 
+                : `${API_BASE_URL}/workspaces`;
+                
+            const response = await fetch(url);
+            
+            if (response.ok) {
+                const data = await response.json();
+                // 백엔드 응답이 배열 형태라고 가정하고 상태에 저장
+                setStores(data);
+            } else {
+                console.error("사업장 데이터를 불러오는데 실패했습니다.");
+            }
+        } catch (error) {
+            console.error("API 연동 에러:", error);
+        }
+    };
+
+    // 화면이 처음 렌더링될 때 전체 사업장 데이터를 가져옴
     useEffect(() => {
         const token = localStorage.getItem('jwt_token');
         const savedNickname = localStorage.getItem('user_nickname');
@@ -42,15 +61,13 @@ const Home = () => {
             if (userRole === 'ADMIN') setIsAdmin(true);
         }
         
-        const validStores = DUMMY_STORES
-            .filter(store => store.reviewCount > 0)
-            .sort((a, b) => b.cleanIndex - a.cleanIndex);
-            
-        setStores(validStores);
+        // 💡 컴포넌트 마운트 시 최초 데이터 로출
+        fetchWorkspaces();
     }, []);
 
+    // 💡 [수정됨] stores 데이터가 바뀔 때마다 마커를 새로 그리는 로직
     useEffect(() => {
-        if (!window.kakao || !window.kakao.maps) return;
+        if (!window.kakao || !window.kakao.maps || stores.length === 0) return;
 
         const container = document.getElementById('kakao-map');
         if (!container) return;
@@ -59,11 +76,19 @@ const Home = () => {
         const map = new window.kakao.maps.Map(container, options);
 
         stores.forEach((store) => {
-            const { color } = getCleanGradeInfo(store.cleanIndex);
+            // 백엔드 변수명에 맞춰서 cleanScore, latitude, longitude 적용
+            const score = store.cleanScore; 
+            const lat = store.latitude;
+            const lng = store.longitude;
+
+            // 좌표가 없으면 핀을 그릴 수 없으니 건너뛰기
+            if (!lat || !lng) return;
+
+            const { color } = getCleanGradeInfo(score);
             const svgMarker = `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 24 35"><path fill="${color}" d="M12 0C5.373 0 0 5.373 0 12c0 7.747 12 23 12 23s12-15.253 12-23C24 5.373 18.627 0 12 0zm0 17c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5z"/></svg>`;
             const markerImageUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgMarker)}`;
             const markerImage = new window.kakao.maps.MarkerImage(markerImageUrl, new window.kakao.maps.Size(28, 40));
-            const markerPosition = new window.kakao.maps.LatLng(store.lat, store.lng);
+            const markerPosition = new window.kakao.maps.LatLng(lat, lng);
             
             const marker = new window.kakao.maps.Marker({ position: markerPosition, image: markerImage });
             marker.setMap(map);
@@ -82,21 +107,10 @@ const Home = () => {
         alert('로그아웃 되었습니다.');
     };
 
+    // 💡 [검색 API 연동] 기존 프론트엔드 필터링에서 백엔드 검색 요청으로 변경!
     const executeSearch = () => {
         const keyword = searchTerm.trim();
-        const validStores = DUMMY_STORES.filter(store => store.reviewCount > 0);
-
-        if (keyword === '') {
-            setStores(validStores.sort((a, b) => b.cleanIndex - a.cleanIndex));
-            setSelectedStore(null);
-            return;
-        }
-        
-        const filteredStores = validStores
-            .filter((store) => store.name.includes(keyword))
-            .sort((a, b) => b.cleanIndex - a.cleanIndex);
-            
-        setStores(filteredStores);
+        fetchWorkspaces(keyword);
         setSelectedStore(null);
     };
 
@@ -112,8 +126,6 @@ const Home = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <button style={logoBtnStyle} onClick={() => navigate('/')}>전남대 클린알바맵</button>
                     <button style={navBtnStyle} onClick={() => setShowIntroModal(true)}>서비스 소개</button>
-                    
-                    {/* 💡 [수정됨] 근로기준법 안내 버튼을 누르면 /guide 경로로 이동하도록 바인딩! */}
                     <button style={navBtnStyle} onClick={() => navigate('/guide')}>근로기준법 안내</button>
                 </div>
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -145,6 +157,7 @@ const Home = () => {
                         <div style={legendRowStyle}><span style={{...legendDotStyle, backgroundColor: '#DD0000'}}></span> 40미만 위험</div>
                     </div>
 
+                    {/* 💡 [수정됨] 백엔드 변수명(cleanScore, district, category 등)에 맞춰 팝업 데이터 렌더링 */}
                     {selectedStore && (
                         <div style={popupStyle}>
                             <button onClick={() => setSelectedStore(null)} style={closeIconBtnStyle}>✕</button>
@@ -153,10 +166,10 @@ const Home = () => {
                                 <span style={{
                                     ...tagStatusStyle, 
                                     backgroundColor: '#fff', 
-                                    color: getCleanGradeInfo(selectedStore.cleanIndex).color,
-                                    border: `1px solid ${getCleanGradeInfo(selectedStore.cleanIndex).color}`
+                                    color: getCleanGradeInfo(selectedStore.cleanScore).color,
+                                    border: `1px solid ${getCleanGradeInfo(selectedStore.cleanScore).color}`
                                 }}>
-                                    {getCleanGradeInfo(selectedStore.cleanIndex).label}
+                                    {getCleanGradeInfo(selectedStore.cleanScore).label}
                                 </span>
                             </div>
 
@@ -164,35 +177,39 @@ const Home = () => {
                                 {selectedStore.name}
                             </h3>
                             <p style={{ margin: '0 0 10px 0', fontSize: '12px', color: '#666' }}>
-                                {selectedStore.location} • {selectedStore.category}
+                                {selectedStore.district} • {selectedStore.category}
                             </p>
 
                             <div style={grayBoxStyle}>
                                 <div style={boxRowStyle}>
                                     <span style={boxLabelStyle}>클린 점수:</span>
-                                    <span style={{ fontWeight: 'bold', color: getCleanGradeInfo(selectedStore.cleanIndex).color }}>
-                                        {selectedStore.cleanIndex}점
+                                    <span style={{ fontWeight: 'bold', color: getCleanGradeInfo(selectedStore.cleanScore).color }}>
+                                        {selectedStore.cleanScore ? `${selectedStore.cleanScore}점` : '점수 없음'}
                                     </span>
                                 </div>
                                 <div style={boxRowStyle}>
                                     <span style={boxLabelStyle}>산출 근거:</span>
-                                    <span>{selectedStore.oxStats}</span>
+                                    {/* 백엔드에 아직 oxStats 데이터가 없다면 기본값 표시 */}
+                                    <span>{selectedStore.oxStats || '수집된 근거 데이터가 없습니다.'}</span>
                                 </div>
                             </div>
 
                             <div style={tintedBoxStyle}>
                                 <div style={boxRowStyle}>
                                     <span style={boxLabelStyle}>누적 후기:</span>
-                                    <span>{selectedStore.reviewCount}명 참여</span>
+                                    <span>{selectedStore.reviewCount || 0}명 참여</span>
                                 </div>
                                 <div style={boxRowStyle}>
                                     <span style={boxLabelStyle}>후기 요약:</span>
-                                    <span style={{ lineHeight: '1.3' }}>{selectedStore.reviewSummary}</span>
+                                    <span style={{ lineHeight: '1.3' }}>
+                                        {selectedStore.reviewSummary || '아직 요약된 후기가 없습니다.'}
+                                    </span>
                                 </div>
                             </div>
 
                             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '8px' }}>
-                                <button onClick={() => navigate(`/detail/${selectedStore.id}`)} style={modernDetailBtnStyle}>
+                                {/* id 대신 백엔드 고유 ID인 workspaceId 사용 */}
+                                <button onClick={() => navigate(`/detail/${selectedStore.workspaceId}`)} style={modernDetailBtnStyle}>
                                     후기 자세히 보기 ➔
                                 </button>
                             </div>
@@ -227,18 +244,19 @@ const Home = () => {
                     
                     <div style={listContainerStyle}>
                         {stores.length > 0 ? (
-                            stores.map((store, index) => (
-                                <div key={store.id} style={listItemStyle} onClick={() => setSelectedStore(store)}>
+                            stores.map((store) => (
+                                // 반복문 key는 고유 식별자인 workspaceId로 설정
+                                <div key={store.workspaceId} style={listItemStyle} onClick={() => setSelectedStore(store)}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div style={storeNameStyle}>
                                             {store.name}
                                         </div>
-                                        <div style={{ fontWeight: 'bold', fontSize: '16px', color: getCleanGradeInfo(store.cleanIndex).color }}>
-                                            {store.cleanIndex}점
+                                        <div style={{ fontWeight: 'bold', fontSize: '16px', color: getCleanGradeInfo(store.cleanScore).color }}>
+                                            {store.cleanScore}점
                                         </div>
                                     </div>
                                     <div style={storeInfoStyle}>
-                                        {store.location} • {store.category}
+                                        {store.district} • {store.category}
                                     </div>
                                 </div>
                             ))
@@ -299,7 +317,7 @@ const Home = () => {
 };
 
 // --- 스타일 영역 ---
-
+// (기존 스타일과 완벽히 동일하게 유지)
 const pageStyle = { width: '100vw', height: '100vh', backgroundColor: '#f5f5f5', display: 'flex', flexDirection: 'column' };
 const headerStyle = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '64px', padding: '0 24px', backgroundColor: '#ffffff', borderBottom: '1px solid #ddd', zIndex: 10 };
 const logoBtnStyle = { backgroundColor: 'transparent', border: 'none', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer', color: '#333' };

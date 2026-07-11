@@ -1,10 +1,3 @@
-라이브러리
-/
-다은
-/
-Guide_main_header.jsx
-
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

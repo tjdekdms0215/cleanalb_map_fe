@@ -229,19 +229,7 @@ const ReviewSelect = () => {
                 </div>
             </header>
 
-            <main
-                style={{
-                    ...mainStyle,
-                    justifyContent:
-                        results.length > 0 || hasSearched
-                            ? 'flex-start'
-                            : 'center',
-                    paddingTop:
-                        results.length > 0 || hasSearched
-                            ? '72px'
-                            : '24px'
-                }}
-            >
+            <main style={mainStyle}>
                 <section style={contentSectionStyle}>
                     <div style={titleAreaStyle}>
                         <h1 style={titleStyle}>알바 후기 작성</h1>
@@ -251,87 +239,98 @@ const ReviewSelect = () => {
                     </div>
 
                     <div style={searchCardStyle}>
-                        <form
-                            onSubmit={handleSearch}
-                            style={searchFormStyle}
-                        >
-                            <input
-                                type="text"
-                                value={keyword}
-                                onChange={(event) =>
-                                    setKeyword(event.target.value)
-                                }
-                                placeholder="사업장 이름 검색 (예: 파스쿠찌 전남대)"
-                                style={searchInputStyle}
-                                aria-label="후기를 작성할 사업장 이름"
-                            />
-
-                            <button
-                                type="submit"
-                                style={searchButtonStyle}
-                                disabled={isLoading}
+                        <div style={searchTopStyle}>
+                            <form
+                                onSubmit={handleSearch}
+                                style={searchFormStyle}
                             >
-                                <svg
-                                    viewBox="0 0 24 24"
-                                    style={searchIconStyle}
-                                    aria-hidden="true"
+                                <input
+                                    type="text"
+                                    value={keyword}
+                                    onChange={(event) =>
+                                        setKeyword(event.target.value)
+                                    }
+                                    placeholder="사업장 이름 검색 (예: 파스쿠찌 전남대)"
+                                    style={searchInputStyle}
+                                    aria-label="후기를 작성할 사업장 이름"
+                                />
+
+                                <button
+                                    type="submit"
+                                    style={{
+                                        ...searchButtonStyle,
+                                        opacity: isLoading ? 0.72 : 1,
+                                        cursor: isLoading
+                                            ? 'default'
+                                            : 'pointer'
+                                    }}
+                                    disabled={isLoading}
                                 >
-                                    <path
-                                        fill="currentColor"
-                                        d="M10.5 4a6.5 6.5 0 1 0 3.95 11.66l4.44 4.45 1.42-1.42-4.45-4.44A6.5 6.5 0 0 0 10.5 4Zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z"
-                                    />
-                                </svg>
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        style={searchIconStyle}
+                                        aria-hidden="true"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M10.5 4a6.5 6.5 0 1 0 3.95 11.66l4.44 4.45 1.42-1.42-4.45-4.44A6.5 6.5 0 0 0 10.5 4Zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9Z"
+                                        />
+                                    </svg>
 
-                                {isLoading ? '검색 중' : '검색'}
-                            </button>
-                        </form>
-                    </div>
-
-                    {errorMessage && (
-                        <p style={errorTextStyle}>
-                            {errorMessage}
-                        </p>
-                    )}
-
-                    {isLoading && (
-                        <div style={statusTextStyle}>
-                            사업장을 검색하고 있습니다.
+                                    {isLoading ? '검색 중' : '검색'}
+                                </button>
+                            </form>
                         </div>
-                    )}
 
-                    {!isLoading &&
-                        hasSearched &&
-                        !errorMessage &&
-                        results.length === 0 && (
-                            <div style={emptyResultStyle}>
-                                검색 결과가 없습니다.
+                        {errorMessage && (
+                            <div style={feedbackRowStyle}>
+                                <span style={errorTextStyle}>
+                                    {errorMessage}
+                                </span>
                             </div>
                         )}
 
-                    {!isLoading && results.length > 0 && (
-                        <div style={resultAreaStyle}>
-                            <div style={resultHeaderStyle}>
-                                <h2 style={resultTitleStyle}>
-                                    검색 결과
-                                </h2>
-                                <span style={resultCountStyle}>
-                                    {results.length}곳
+                        {isLoading && (
+                            <div style={feedbackRowStyle}>
+                                <span style={statusTextStyle}>
+                                    사업장을 검색하고 있습니다.
                                 </span>
                             </div>
+                        )}
 
+                        {!isLoading &&
+                            hasSearched &&
+                            !errorMessage &&
+                            results.length === 0 && (
+                                <div style={feedbackRowStyle}>
+                                    <span style={emptyResultStyle}>
+                                        검색 결과가 없습니다.
+                                    </span>
+                                </div>
+                            )}
+
+                        {!isLoading && results.length > 0 && (
                             <div style={resultListStyle}>
                                 {results.map((place) => {
-                                    const isRegistered =
-                                        Boolean(
-                                            place.registered &&
-                                            place.workspaceId
-                                        );
-
                                     const resultKey =
                                         place.workspaceId ||
                                         place.kakaoPlaceId ||
                                         place.providerPlaceId ||
                                         `${place.name}-${place.address}`;
+
+                                    const category =
+                                        place.category ||
+                                        place.categoryName ||
+                                        place.category_name ||
+                                        '업종 정보 없음';
+
+                                    const address =
+                                        place.address ||
+                                        place.roadAddress ||
+                                        place.addressName ||
+                                        place.address_name ||
+                                        place.road_address_name ||
+                                        '주소 정보 없음';
 
                                     return (
                                         <button
@@ -340,87 +339,34 @@ const ReviewSelect = () => {
                                             onClick={() =>
                                                 handleSelectWorkspace(place)
                                             }
-                                            style={resultCardStyle}
+                                            style={resultRowStyle}
                                         >
                                             <div style={resultMainStyle}>
-                                                <div style={resultNameRowStyle}>
-                                                    <strong
-                                                        style={placeNameStyle}
-                                                    >
-                                                        {place.name}
-                                                    </strong>
+                                                <strong style={placeNameStyle}>
+                                                    {place.name ||
+                                                        place.placeName ||
+                                                        place.place_name ||
+                                                        '사업장 이름 없음'}
+                                                </strong>
 
-                                                    <span
-                                                        style={
-                                                            isRegistered
-                                                                ? registeredBadgeStyle
-                                                                : newBadgeStyle
-                                                        }
-                                                    >
-                                                        {isRegistered
-                                                            ? '등록 사업장'
-                                                            : '신규 장소'}
+                                                <div style={placeMetaLineStyle}>
+                                                    <span>{category}</span>
+                                                    <span style={metaDividerStyle}>
+                                                        •
                                                     </span>
+                                                    <span>{address}</span>
                                                 </div>
-
-                                                <div style={placeMetaStyle}>
-                                                    {place.address ||
-                                                        place.roadAddress ||
-                                                        '주소 정보 없음'}
-                                                </div>
-
-                                                <div style={placeMetaStyle}>
-                                                    {place.category ||
-                                                        '업종 정보 없음'}
-                                                </div>
-
-                                                {isRegistered ? (
-                                                    <div style={summaryRowStyle}>
-                                                        <span>
-                                                            후기{' '}
-                                                            {place.reviewCount ??
-                                                                0}
-                                                            개
-                                                        </span>
-                                                        <span
-                                                            style={
-                                                                summaryDividerStyle
-                                                            }
-                                                        >
-                                                            •
-                                                        </span>
-                                                        <span>
-                                                            클린점수{' '}
-                                                            {place.cleanScore ??
-                                                                '미정'}
-                                                            {place.cleanScore !==
-                                                                null &&
-                                                            place.cleanScore !==
-                                                                undefined
-                                                                ? '점'
-                                                                : ''}
-                                                        </span>
-                                                    </div>
-                                                ) : (
-                                                    <div style={newPlaceTextStyle}>
-                                                        아직 등록되지 않은 장소 ·
-                                                        첫 후기 작성
-                                                    </div>
-                                                )}
                                             </div>
 
-                                            <span
-                                                style={selectArrowStyle}
-                                                aria-hidden="true"
-                                            >
-                                                ›
+                                            <span style={selectTextStyle}>
+                                                선택
                                             </span>
                                         </button>
                                     );
                                 })}
                             </div>
-                        </div>
-                    )}
+                        )}
+                    </div>
                 </section>
             </main>
 
@@ -654,7 +600,8 @@ const mainStyle = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '24px',
+    justifyContent: 'center',
+    padding: '48px 24px',
     boxSizing: 'border-box',
     backgroundColor: '#f7f8fa',
     overflowY: 'auto'
@@ -690,9 +637,13 @@ const subtitleStyle = {
 
 const searchCardStyle = {
     width: '100%',
-    padding: '20px',
     backgroundColor: '#ffffff',
     border: '1px solid #dfe3e8',
+    boxSizing: 'border-box'
+};
+
+const searchTopStyle = {
+    padding: '20px',
     boxSizing: 'border-box'
 };
 
@@ -726,10 +677,8 @@ const searchButtonStyle = {
     backgroundColor: '#4169e1',
     border: 'none',
     color: '#ffffff',
-    cursor: 'pointer',
     fontSize: '14px',
-    fontWeight: '700',
-    opacity: 1
+    fontWeight: '700'
 };
 
 const searchIconStyle = {
@@ -737,70 +686,48 @@ const searchIconStyle = {
     height: '18px'
 };
 
+const feedbackRowStyle = {
+    minHeight: '68px',
+    display: 'flex',
+    alignItems: 'center',
+    padding: '16px 20px',
+    borderTop: '1px solid #e4e7eb',
+    boxSizing: 'border-box'
+};
+
 const errorTextStyle = {
-    margin: '12px 2px 0',
+    margin: 0,
     color: '#c43b3b',
     fontSize: '13px',
     lineHeight: '1.5'
 };
 
 const statusTextStyle = {
-    marginTop: '28px',
     color: '#747c88',
-    fontSize: '14px',
-    textAlign: 'center'
+    fontSize: '13px'
 };
 
 const emptyResultStyle = {
-    marginTop: '28px',
-    padding: '28px',
-    backgroundColor: '#ffffff',
-    border: '1px solid #e1e4e8',
     color: '#747c88',
-    fontSize: '14px',
-    textAlign: 'center'
-};
-
-const resultAreaStyle = {
-    width: '100%',
-    marginTop: '30px'
-};
-
-const resultHeaderStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '12px'
-};
-
-const resultTitleStyle = {
-    margin: 0,
-    color: '#222831',
-    fontSize: '17px',
-    fontWeight: '800'
-};
-
-const resultCountStyle = {
-    color: '#7b8490',
-    fontSize: '13px',
-    fontWeight: '600'
+    fontSize: '13px'
 };
 
 const resultListStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px'
+    width: '100%',
+    borderTop: '1px solid #e4e7eb'
 };
 
-const resultCardStyle = {
+const resultRowStyle = {
     width: '100%',
+    minHeight: '68px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: '16px',
-    padding: '18px 20px',
+    gap: '18px',
+    padding: '14px 20px',
     backgroundColor: '#ffffff',
-    border: '1px solid #e0e4e9',
+    border: 'none',
+    borderBottom: '1px solid #edf0f3',
     textAlign: 'left',
     cursor: 'pointer',
     boxSizing: 'border-box'
@@ -811,71 +738,34 @@ const resultMainStyle = {
     flex: 1
 };
 
-const resultNameRowStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: '8px',
-    marginBottom: '7px'
-};
-
 const placeNameStyle = {
+    display: 'block',
+    marginBottom: '5px',
     color: '#222831',
-    fontSize: '16px',
-    fontWeight: '800'
+    fontSize: '14px',
+    fontWeight: '800',
+    lineHeight: '1.35'
 };
 
-const registeredBadgeStyle = {
-    padding: '3px 7px',
-    backgroundColor: '#edf3ff',
-    color: '#3459c7',
-    fontSize: '11px',
-    fontWeight: '800'
-};
-
-const newBadgeStyle = {
-    padding: '3px 7px',
-    backgroundColor: '#fff6e5',
-    color: '#a56700',
-    fontSize: '11px',
-    fontWeight: '800'
-};
-
-const placeMetaStyle = {
-    marginTop: '3px',
-    color: '#717985',
-    fontSize: '13px',
-    lineHeight: '1.45'
-};
-
-const summaryRowStyle = {
+const placeMetaLineStyle = {
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: '7px',
-    marginTop: '9px',
-    color: '#4a5564',
+    gap: '5px',
+    color: '#8a929f',
     fontSize: '12px',
-    fontWeight: '700'
+    lineHeight: '1.4'
 };
 
-const summaryDividerStyle = {
-    color: '#b3bac4'
+const metaDividerStyle = {
+    color: '#b1b7c0'
 };
 
-const newPlaceTextStyle = {
-    marginTop: '9px',
-    color: '#9a6500',
-    fontSize: '12px',
-    fontWeight: '700'
-};
-
-const selectArrowStyle = {
+const selectTextStyle = {
     flexShrink: 0,
-    color: '#9aa2ad',
-    fontSize: '28px',
-    fontWeight: '400',
-    lineHeight: 1
+    color: '#4169e1',
+    fontSize: '12px',
+    fontWeight: '600'
 };
 
 const modalOverlayStyle = {

@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = 'https://cleanalb-map.duckdns.org';
 
+const KAKAO_REST_API_KEY =
+    import.meta.env.VITE_KAKAO_REST_API_KEY;
+
+const KAKAO_REDIRECT_URI =
+    import.meta.env.VITE_KAKAO_REDIRECT_URI;
+
 const getCleanGradeInfo = (score) => {
     if (score === null || score === undefined) {
         return {
@@ -874,6 +880,35 @@ const btnStyle = {
     cursor: 'pointer',
     fontSize: '14px',
     color: '#444'
+};
+
+const kakaoLoginBtnStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    height: '38px',
+    padding: '0 16px',
+    backgroundColor: '#FEE500',
+    color: '#191919',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: '700'
+};
+
+const kakaoLogoStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '20px',
+    height: '20px',
+    backgroundColor: '#191919',
+    color: '#FEE500',
+    borderRadius: '50%',
+    fontSize: '11px',
+    fontWeight: '900'
 };
 
 const adminBtnStyle = {

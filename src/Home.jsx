@@ -1032,31 +1032,46 @@ const popupStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: '310px',
-    maxWidth: 'calc(100% - 28px)',
-    maxHeight: 'calc(100% - 28px)',
+
+    width: '360px',
+    maxWidth: 'calc(100% - 32px)',
+    maxHeight: 'calc(100% - 32px)',
+
+    padding: '22px',
+    boxSizing: 'border-box',
+
     backgroundColor: '#ffffff',
     border: 'none',
     borderRadius: 0,
+
     overflowX: 'hidden',
     overflowY: 'auto',
+
     zIndex: 20,
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.16)'
+
+    boxShadow: '0 10px 28px rgba(0,0,0,0.16)'
 };
 
 const popupCloseBtnStyle = {
     position: 'absolute',
-    top: '9px',
-    right: '9px',
-    width: '27px',
-    height: '27px',
+    top: '14px',
+    right: '14px',
+
+    width: '30px',
+    height: '30px',
     padding: 0,
+
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
     backgroundColor: 'transparent',
     border: 'none',
+
     color: '#8a8a8a',
-    fontSize: '17px',
+    fontSize: '19px',
     lineHeight: 1,
     cursor: 'pointer'
 };
@@ -1064,31 +1079,37 @@ const popupCloseBtnStyle = {
 const statusBadgeRowStyle = {
     display: 'flex',
     alignItems: 'center',
-    minHeight: '26px',
-    marginBottom: '8px',
-    paddingRight: '32px'
+
+    minHeight: '30px',
+    marginBottom: '16px',
+    paddingRight: '38px'
 };
 
 const tagStatusStyle = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    minWidth: '42px',
-    padding: '4px 9px',
+
+    minWidth: '48px',
+    padding: '6px 11px',
+
     backgroundColor: 'rgba(255,255,255,0.72)',
     border: 'none',
     borderRadius: 0,
-    fontSize: '12px',
+
+    fontSize: '13px',
     fontWeight: '900'
 };
 
 const popupStoreNameStyle = {
-    margin: '0 0 3px',
-    paddingRight: '18px',
+    margin: '0 0 6px',
+    paddingRight: '30px',
+
     color: '#2d2d2d',
-    fontSize: '18px',
+    fontSize: '21px',
     fontWeight: '900',
-    lineHeight: '1.25',
+    lineHeight: '1.3',
+
     wordBreak: 'keep-all'
 };
 
@@ -1096,10 +1117,12 @@ const popupMetaStyle = {
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: '4px',
-    margin: '0 0 10px',
+
+    gap: '6px',
+    margin: '0 0 18px',
+
     color: '#666666',
-    fontSize: '12px',
+    fontSize: '13px',
     fontWeight: '600'
 };
 
@@ -1110,9 +1133,11 @@ const metaDividerStyle = {
 const grayBoxStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
-    marginBottom: '8px',
-    padding: '10px 11px',
+
+    gap: '10px',
+    marginBottom: '12px',
+    padding: '15px 16px',
+
     backgroundColor: 'rgba(255,255,255,0.72)',
     border: 'none',
     borderRadius: 0
@@ -1121,9 +1146,11 @@ const grayBoxStyle = {
 const tintedBoxStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
-    marginBottom: '10px',
-    padding: '10px 11px',
+
+    gap: '10px',
+    marginBottom: '16px',
+    padding: '15px 16px',
+
     backgroundColor: 'rgba(255,255,255,0.48)',
     border: 'none',
     borderRadius: 0
@@ -1132,44 +1159,52 @@ const tintedBoxStyle = {
 const boxRowStyle = {
     display: 'flex',
     alignItems: 'flex-start',
-    gap: '7px',
+
+    gap: '12px',
+
     color: '#333333',
-    fontSize: '12px',
-    lineHeight: '1.4'
+    fontSize: '13px',
+    lineHeight: '1.55'
 };
 
 const boxLabelStyle = {
-    minWidth: '61px',
+    minWidth: '72px',
     color: '#555555',
     fontWeight: '900',
     flexShrink: 0
 };
 
 const boxValueStyle = {
-    fontSize: '13px',
+    fontSize: '15px',
     fontWeight: '900'
 };
 
 const boxTextStyle = {
     minWidth: 0,
+
     color: '#333333',
-    fontSize: '12px',
+    fontSize: '13px',
     fontWeight: '500',
-    lineHeight: '1.4',
+    lineHeight: '1.55',
+
     wordBreak: 'keep-all'
 };
 
 const detailButtonAreaStyle = {
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    marginTop: '2px'
 };
 
 const modernDetailBtnStyle = {
-    padding: '10px 14px',
+    padding: '11px 16px',
+
     backgroundColor: 'rgba(255,255,255,0.82)',
     border: 'none',
     borderRadius: 0,
+
     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+
     cursor: 'pointer',
     fontSize: '13px',
     fontWeight: '900'

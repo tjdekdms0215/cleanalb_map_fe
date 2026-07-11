@@ -5,6 +5,7 @@ import Home from './Home';
 import AuthHandler from './AuthHandler';
 import Guide from './Guide';
 import ReviewSelect from './ReviewSelect';
+import ReviewWrite from './ReviewWrite';
 
 const App = () => {
     return (

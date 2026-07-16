@@ -221,23 +221,29 @@ const Guide = () => {
                                 { badge: '월급', desc: '월급 1,893,540원을 받고 1주 40시간(주 5일, 1일 8시간)을 근무한 경우', calc: '10,320원 > 1,893,540원 ÷ 209시간 = 9,060원', note: '* 주 소정근로시간 40시간 → 월환산 기준 시간수 5*200시간' }
                             ].map((row, idx) => (
                                 <div key={idx} style={calculationRowStyle}>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '24px',
-                                            flex: '1 1 380px',
-                                            minWidth: 0
-                                        }}
-                                    >
-                                        <span style={roundBadgeStyle}>{row.badge}</span>
-                                        <span style={calculationDescriptionStyle}>{row.desc}</span>
-                                    </div>
+                                    <span style={roundBadgeStyle}>
+                                        {row.badge}
+                                    </span>
+
+                                    <span style={calculationDescriptionStyle}>
+                                        {row.desc}
+                                    </span>
+
                                     <div style={calculationFormulaWrapStyle}>
-                                        <strong style={calculationFormulaStyle}>{row.calc}</strong>
-                                        {row.note && <span style={calculationNoteStyle}>{row.note}</span>}
+                                        <strong style={calculationFormulaStyle}>
+                                            {row.calc}
+                                        </strong>
+
+                                        {row.note && (
+                                            <span style={calculationNoteStyle}>
+                                                {row.note}
+                                            </span>
+                                        )}
                                     </div>
-                                    <span style={violationTextStyle}>⚠ 최저임금 위반</span>
+
+                                    <span style={violationTextStyle}>
+                                        ⚠ 최저임금 위반
+                                    </span>
                                 </div>
                             ))}
                         </div>
@@ -581,14 +587,81 @@ const bodyParagraphStyle = { margin: '0 0 40px', color: '#444', fontSize: '15px'
 const centerListStyle = { fontSize: '14px', color: '#444', lineHeight: '1.8' };
 const bulletListStyle = { margin: 0, paddingLeft: '20px', color: '#444', fontSize: '14px', lineHeight: '1.8' };
 
-const calculationListStyle = { width: '100%', minWidth: 0, display: 'flex', flexDirection: 'column', borderTop: '1px solid #eee', borderBottom: '1px solid #eee', backgroundColor: '#fff' };
-const calculationRowStyle = { width: '100%', minWidth: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '18px 28px', padding: '24px 0', borderBottom: '1px solid #eee', boxSizing: 'border-box' };
-const roundBadgeStyle = { width: '44px', height: '44px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', backgroundColor: '#a3a3a3', color: '#ffffff', fontSize: '14px', fontWeight: 'bold', flexShrink: 0 };
-const calculationDescriptionStyle = { color: '#555', fontSize: '14px' };
-const calculationFormulaWrapStyle = { flex: '1 1 340px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '6px' };
-const calculationFormulaStyle = { color: '#333', fontSize: '15px', fontWeight: 'bold' };
-const calculationNoteStyle = { color: '#999', fontSize: '12px' };
-const violationTextStyle = { flex: '0 0 auto', marginLeft: 'auto', textAlign: 'right', color: '#e11d48', fontSize: '14px', fontWeight: 'bold', whiteSpace: 'nowrap' };
+const calculationListStyle = {
+    width: '100%',
+    minWidth: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    overflowX: 'auto',
+    backgroundColor: '#ffffff',
+    borderTop: '1px solid #eeeeee',
+    borderBottom: '1px solid #eeeeee'
+};
+
+const calculationRowStyle = {
+    width: '100%',
+    minWidth: '900px',
+    minHeight: '102px',
+    padding: '16px 0',
+    display: 'grid',
+    gridTemplateColumns:
+        '54px 248px minmax(340px, 1fr) 130px',
+    columnGap: '24px',
+    alignItems: 'center',
+    boxSizing: 'border-box',
+    borderBottom: '1px solid #eeeeee'
+};
+
+const roundBadgeStyle = {
+    width: '54px',
+    height: '54px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    backgroundColor: '#aeb1b5',
+    color: '#ffffff',
+    fontSize: '16px',
+    fontWeight: '800',
+    lineHeight: 1
+};
+
+const calculationDescriptionStyle = {
+    minWidth: 0,
+    color: '#59616d',
+    fontSize: '14px',
+    lineHeight: '1.65',
+    wordBreak: 'keep-all'
+};
+
+const calculationFormulaWrapStyle = {
+    minWidth: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '5px'
+};
+
+const calculationFormulaStyle = {
+    color: '#2f3338',
+    fontSize: '16px',
+    fontWeight: '800',
+    lineHeight: '1.45',
+    whiteSpace: 'normal'
+};
+
+const calculationNoteStyle = {
+    color: '#999fa7',
+    fontSize: '12px',
+    lineHeight: '1.45'
+};
+
+const violationTextStyle = {
+    justifySelf: 'end',
+    color: '#ef2348',
+    fontSize: '13px',
+    fontWeight: '800',
+    whiteSpace: 'nowrap'
+};
 
 const faqSectionStyle = { marginTop: '60px' };
 const sectionLabelStyle = { margin: '0 0 16px', color: '#111', fontSize: '18px', fontWeight: 'bold' };

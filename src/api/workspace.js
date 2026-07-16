@@ -11,53 +11,34 @@ export const getWorkspaces = async (
     status = null,
     keyword = null
 ) => {
-    try {
-        const params = {};
+    const params = {};
 
-        if (status) {
-            params.status = status;
-        }
-
-        if (keyword) {
-            params.keyword = keyword;
-        }
-
-        const response = await api.get('/workspaces', {
-            params
-        });
-
-        return response.data;
-    } catch (error) {
-        if (error.response?.status === 400) {
-            console.error(
-                '잘못된 사업장 검색 조건이 전달되었습니다.'
-            );
-        } else {
-            console.error(
-                '사업장 데이터를 불러오는 중 오류가 발생했습니다.',
-                error
-            );
-        }
-
-        throw error;
+    if (status) {
+        params.status = status;
     }
-};
 
-/**
- * 후기 작성 대상 사업장 검색
- * 내부 DB 사업장과 카카오 장소 검색 결과를 조회합니다.
- *
- * @param {string} keyword
- * @returns {Promise<Array>}
- */
-export const searchReviewTargets = async (keyword) => {
-    const response = await api.get('/workspaces/search', {
-        params: {
-            keyword
-        }
+    if (keyword) {
+        params.keyword = keyword;
+    }
+
+    const response = await api.get('/workspaces', {
+        params,
+        useAuth: false
     });
 
-    console.log('사업장 검색 응답:', response.data);
+    return response.data;
+};
+
+export const searchReviewTargets = async (keyword) => {
+    const response = await api.get(
+        '/workspaces/search',
+        {
+            params: {
+                keyword
+            },
+            useAuth: false
+        }
+    );
 
     if (!Array.isArray(response.data)) {
         throw new Error(
@@ -68,10 +49,7 @@ export const searchReviewTargets = async (keyword) => {
     return response.data.map((place) => ({
         ...place,
         category:
-            typeof place.category === 'string' &&
-            place.category.trim()
-                ? place.category
-                : '기타'
+            place.category?.trim() || '기타'
     }));
 };
 /**

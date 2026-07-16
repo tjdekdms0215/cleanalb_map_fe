@@ -137,59 +137,6 @@ const ReviewSelect = () => {
         }
     };
 
-    const handleSelectWorkspace = async (place) => {
-        // 1. 이미 DB에 등록된 사업장인 경우 (existing: true)
-        if (place.existing && place.workspaceId) {
-            navigate(`/review/write/${place.workspaceId}`, {
-                state: { workspace: place }
-            });
-            return;
-        }
-
-        // 2. 미등록 사업장인 경우 (existing: false) - Resolve API 호출
-        try {
-            setIsLoading(true); // 이동 전 로딩 처리
-            const token = localStorage.getItem('jwt_token');
-            
-            const response = await fetch(`${API_BASE_URL}/workspaces/resolve`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token && { Authorization: `Bearer ${token}` })
-                },
-                body: JSON.stringify({
-                    kakaoPlaceId: place.kakaoPlaceId,
-                    name: place.name,
-                    address: place.address,
-                    category: place.category || '기타', // 카테고리 없을 시 '기타' 처리
-                    latitude: place.latitude,
-                    longitude: place.longitude
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error('사업장 초기화 등록에 실패했습니다.');
-            }
-
-            const data = await response.json();
-            const resolvedWorkspaceId = data.workspaceId; // Resolve API 응답에서 ID 추출
-
-            if (!resolvedWorkspaceId) {
-                throw new Error('생성된 workspaceId가 존재하지 않습니다.');
-            }
-
-            // 확보된 workspaceId로 이동
-            navigate(`/review/write/${resolvedWorkspaceId}`, {
-                state: { workspace: { ...place, workspaceId: resolvedWorkspaceId, existing: true } }
-            });
-
-        } catch (error) {
-            console.error('사업장 Resolve 에러:', error);
-            alert('사업장 정보를 동기화하는 데 실패했습니다. 다시 시도해 주세요.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     return (
         <div style={pageStyle}>

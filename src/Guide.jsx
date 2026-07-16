@@ -406,12 +406,10 @@ const InfoCard = ({ title, centered = false, children }) => (
 
 // --- CSS 스타일링 영역 ---
 
-// 💡 [핵심 수정] height 100vh와 overflow hidden을 제거하고 브라우저 기본 스크롤 활용
 const pageStyle = {
     width: '100%',
-    minHeight: '100vh',
-    overflowY: 'auto',
-    overflowX: 'hidden',
+    minHeight: '100vh',  // 💡 height: '100vh'를 지우고 minHeight로 변경!
+    // overflowY: 'auto', // 💡 overflow 속성도 아예 지워주세요! (브라우저 기본 스크롤 사용)
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#fafafa',

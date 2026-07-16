@@ -59,6 +59,46 @@ const Guide = () => {
         }
     }, []);
 
+    useEffect(() => {
+        const html = document.documentElement;
+        const body = document.body;
+        const root = document.getElementById('root');
+
+        const previous = {
+            htmlHeight: html.style.height,
+            htmlOverflow: html.style.overflow,
+            bodyHeight: body.style.height,
+            bodyMargin: body.style.margin,
+            bodyOverflow: body.style.overflow,
+            rootHeight: root?.style.height || '',
+            rootMinHeight: root?.style.minHeight || ''
+        };
+
+        html.style.height = '100%';
+        html.style.overflow = 'hidden';
+        body.style.height = '100%';
+        body.style.margin = '0';
+        body.style.overflow = 'hidden';
+
+        if (root) {
+            root.style.height = '100%';
+            root.style.minHeight = '0';
+        }
+
+        return () => {
+            html.style.height = previous.htmlHeight;
+            html.style.overflow = previous.htmlOverflow;
+            body.style.height = previous.bodyHeight;
+            body.style.margin = previous.bodyMargin;
+            body.style.overflow = previous.bodyOverflow;
+
+            if (root) {
+                root.style.height = previous.rootHeight;
+                root.style.minHeight = previous.rootMinHeight;
+            }
+        };
+    }, []);
+
     const activeGuide = useMemo(() => guideData[activeTab], [activeTab]);
 
     const handleKakaoLogin = () => {
@@ -114,7 +154,16 @@ const Guide = () => {
         <>
             {/* 시급, 일급 등 스탯 바 */}
             <div style={{ ...fullWidthWrapperStyle, backgroundColor: '#3455c2' }}>
-                <div style={{ ...innerContainerStyle, display: 'flex' }}>
+                <div
+                    style={{
+                        ...innerContainerStyle,
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(4, minmax(170px, 1fr))',
+                        overflowX: 'auto',
+                        paddingLeft: 0,
+                        paddingRight: 0
+                    }}
+                >
                     {[
                         ['시급 1시간', '10,320원'],
                         ['일급 8시간', '82,560원'],
@@ -137,7 +186,7 @@ const Guide = () => {
 
             {/* 메인 콘텐츠 영역 */}
             <div style={{ ...fullWidthWrapperStyle, backgroundColor: '#fafafa', flex: 1 }}>
-                <div style={{ ...innerContainerStyle, padding: '56px 32px 80px 32px' }}>
+                <div style={{ ...innerContainerStyle, padding: 'clamp(36px, 4vw, 56px) clamp(20px, 4vw, 48px) 80px' }}>
                     
                     {/* 3단 카드 */}
                     <div style={threeColumnGridStyle}>
@@ -172,7 +221,15 @@ const Guide = () => {
                                 { badge: '월급', desc: '월급 1,893,540원을 받고 1주 40시간(주 5일, 1일 8시간)을 근무한 경우', calc: '10,320원 > 1,893,540원 ÷ 209시간 = 9,060원', note: '* 주 소정근로시간 40시간 → 월환산 기준 시간수 5*200시간' }
                             ].map((row, idx) => (
                                 <div key={idx} style={calculationRowStyle}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flex: 1.5 }}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '24px',
+                                            flex: '1 1 380px',
+                                            minWidth: 0
+                                        }}
+                                    >
                                         <span style={roundBadgeStyle}>{row.badge}</span>
                                         <span style={calculationDescriptionStyle}>{row.desc}</span>
                                     </div>
@@ -198,7 +255,7 @@ const Guide = () => {
 
     const renderContractContent = () => (
         <div style={{ ...fullWidthWrapperStyle, backgroundColor: '#fafafa', flex: 1 }}>
-            <div style={{ ...innerContainerStyle, padding: '56px 32px 80px 32px' }}>
+            <div style={{ ...innerContainerStyle, padding: 'clamp(36px, 4vw, 56px) clamp(20px, 4vw, 48px) 80px' }}>
                 <h2 style={mainSectionTitleStyle}>근로계약서란?</h2>
                 <p style={bodyParagraphStyle}>
                     근로자가 일을 하기 전에 고용주로부터 그 대가를 지급받기로 서로 약속하고 작성하는 근로 계약 문서로,<br />
@@ -229,7 +286,7 @@ const Guide = () => {
 
     const renderHolidayContent = () => (
         <div style={{ ...fullWidthWrapperStyle, backgroundColor: '#fafafa', flex: 1 }}>
-            <div style={{ ...innerContainerStyle, padding: '56px 32px 80px 32px' }}>
+            <div style={{ ...innerContainerStyle, padding: 'clamp(36px, 4vw, 56px) clamp(20px, 4vw, 48px) 80px' }}>
                 <h2 style={mainSectionTitleStyle}>주휴수당이란?</h2>
                 <p style={bodyParagraphStyle}>
                     1주일 동안 소정근로일을 모두 개근한 근로자에게 1주일에 평균 1회 이상 유급휴일을 주어야 합니다.<br />
@@ -265,7 +322,7 @@ const Guide = () => {
 
     const renderArrearsContent = () => (
         <div style={{ ...fullWidthWrapperStyle, backgroundColor: '#fafafa', flex: 1 }}>
-            <div style={{ ...innerContainerStyle, padding: '56px 32px 80px 32px' }}>
+            <div style={{ ...innerContainerStyle, padding: 'clamp(36px, 4vw, 56px) clamp(20px, 4vw, 48px) 80px' }}>
                 <h2 style={mainSectionTitleStyle}>임금체불이란?</h2>
                 <div style={bodyParagraphStyle}>
                     임금을 지급일에 지급하지 않거나 일부만 지급하는 행위입니다.<br/>
@@ -315,7 +372,8 @@ const Guide = () => {
                     minHeight: '64px',
                     flexShrink: 0,
                     backgroundColor: '#ffffff',
-                    borderBottom: '1px solid #eeeeee'
+                    borderBottom: '1px solid #eeeeee',
+                    zIndex: 20
                 }}
             >
                 <div style={{ ...innerContainerStyle, display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '64px' }}>
@@ -349,15 +407,17 @@ const Guide = () => {
 
             <main style={scrollAreaStyle}>
                 {/* 탭 네비게이션 */}
-            <nav
+            <nav style={{ ...fullWidthWrapperStyle, backgroundColor: '#ffffff' }}>
+                <div
                     style={{
-                        ...fullWidthWrapperStyle,
+                        ...innerContainerStyle,
+                        display: 'flex',
                         overflowX: 'auto',
                         overflowY: 'hidden',
-                        backgroundColor: '#ffffff'
+                        whiteSpace: 'nowrap',
+                        scrollbarWidth: 'thin'
                     }}
                 >
-                <div style={{ ...innerContainerStyle, display: 'flex' }}>
                     {Object.values(TAB_KEYS).map((tab) => (
                         <button
                             type="button"
@@ -378,7 +438,12 @@ const Guide = () => {
 
             {/* 히어로(파란 배경) 영역 */}
             <section style={{ ...fullWidthWrapperStyle, backgroundColor: '#4063ff', color: '#ffffff' }}>
-                <div style={{ ...innerContainerStyle, padding: '48px 32px' }}>
+                <div
+                    style={{
+                        ...innerContainerStyle,
+                        padding: 'clamp(32px, 4vw, 48px) clamp(20px, 4vw, 48px)'
+                    }}
+                >
                     <p style={heroEyebrowStyle}>{activeGuide.eyebrow}</p>
                     <h1 style={heroTitleStyle}>{activeGuide.title}</h1>
                     <p style={heroDescriptionStyle}>
@@ -397,7 +462,17 @@ const Guide = () => {
 
             {/* 푸터 */}
             <footer style={{ ...fullWidthWrapperStyle, backgroundColor: '#ffffff', borderTop: '1px solid #eeeeee' }}>
-                <div style={{ ...innerContainerStyle, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '32px' }}>
+                <div
+                    style={{
+                        ...innerContainerStyle,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                        gap: '16px',
+                        padding: '28px clamp(20px, 4vw, 48px)'
+                    }}
+                >
                     <span style={footerTextStyle}>자세한 사항은 국가법령정보센터에서 확인하실 수 있습니다.</span>
                     <button type="button" style={footerButtonStyle} onClick={openLawCenter}>{activeGuide.footerButton}</button>
                 </div>
@@ -426,7 +501,8 @@ const InfoCard = ({ title, centered = false, children }) => (
 
 const pageStyle = {
     width: '100vw',
-    height: '100vh',
+    height: '100dvh',
+    minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
     overflow: 'hidden',
@@ -446,15 +522,17 @@ const scrollAreaStyle = {
 
 const fullWidthWrapperStyle = {
     width: '100%',
+    minWidth: 0,
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    boxSizing: 'border-box'
 };
 
 const innerContainerStyle = {
     width: '100%',
-    // maxWidth: '1024px',  <-- 이 제한을 지워서 화면 전체를 쓰도록 변경!
+    minWidth: 0,
     boxSizing: 'border-box',
-    padding: '0 48px' // 화면 끝에 글씨가 너무 딱 붙지 않도록 좌우 여백만 살짝 넉넉하게 적용
+    padding: '0 clamp(20px, 4vw, 48px)'
 };
 
 const headerLeftStyle = { display: 'flex', alignItems: 'center', gap: '20px' };
@@ -472,18 +550,18 @@ const kakaoLoginButtonStyle = { height: '38px', padding: '0 16px', display: 'fle
 const kakaoLogoStyle = { width: '18px', height: '18px' };
 const kakaoLoginTextStyle = { color: '#191919', fontSize: '14px', fontWeight: 'bold' };
 
-const tabButtonStyle = { padding: '20px 24px', backgroundColor: 'transparent', borderTop: 'none', borderLeft: 'none', borderRight: 'none', cursor: 'pointer', fontSize: '15px' };
+const tabButtonStyle = { flex: '0 0 auto', padding: '20px 24px', backgroundColor: 'transparent', borderTop: 'none', borderLeft: 'none', borderRight: 'none', cursor: 'pointer', fontSize: '15px' };
 
 const heroEyebrowStyle = { margin: '0 0 10px', fontSize: '14px', opacity: 0.8 };
 const heroTitleStyle = { margin: '0 0 16px', fontSize: '32px', fontWeight: 'bold' };
 const heroDescriptionStyle = { margin: 0, fontSize: '16px', lineHeight: '1.6', opacity: 0.9 };
 
-const wageStatItemStyle = { flex: 1, padding: '28px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', color: '#ffffff' };
+const wageStatItemStyle = { minWidth: '170px', padding: '28px 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', boxSizing: 'border-box', color: '#ffffff' };
 const wageStatLabelStyle = { fontSize: '14px', opacity: 0.8 };
 const wageStatValueStyle = { fontSize: '22px', fontWeight: 'bold' };
 
-const threeColumnGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' };
-const twoColumnGridStyle = { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' };
+const threeColumnGridStyle = { width: '100%', minWidth: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' };
+const twoColumnGridStyle = { width: '100%', minWidth: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' };
 
 const infoCardStyle = { padding: '32px 24px', backgroundColor: '#ffffff', border: '1px solid #f0f0f0' };
 const infoCardTitleStyle = { margin: '0 0 20px 0', color: '#111', fontSize: '18px', fontWeight: 'bold' };
@@ -503,14 +581,14 @@ const bodyParagraphStyle = { margin: '0 0 40px', color: '#444', fontSize: '15px'
 const centerListStyle = { fontSize: '14px', color: '#444', lineHeight: '1.8' };
 const bulletListStyle = { margin: 0, paddingLeft: '20px', color: '#444', fontSize: '14px', lineHeight: '1.8' };
 
-const calculationListStyle = { display: 'flex', flexDirection: 'column', borderTop: '1px solid #eee', borderBottom: '1px solid #eee', backgroundColor: '#fff' };
-const calculationRowStyle = { display: 'flex', alignItems: 'center', padding: '24px 0', borderBottom: '1px solid #eee' };
+const calculationListStyle = { width: '100%', minWidth: 0, display: 'flex', flexDirection: 'column', borderTop: '1px solid #eee', borderBottom: '1px solid #eee', backgroundColor: '#fff' };
+const calculationRowStyle = { width: '100%', minWidth: 0, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '18px 28px', padding: '24px 0', borderBottom: '1px solid #eee', boxSizing: 'border-box' };
 const roundBadgeStyle = { width: '44px', height: '44px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', backgroundColor: '#a3a3a3', color: '#ffffff', fontSize: '14px', fontWeight: 'bold', flexShrink: 0 };
 const calculationDescriptionStyle = { color: '#555', fontSize: '14px' };
-const calculationFormulaWrapStyle = { flex: 2, display: 'flex', flexDirection: 'column', gap: '6px' };
+const calculationFormulaWrapStyle = { flex: '1 1 340px', minWidth: 0, display: 'flex', flexDirection: 'column', gap: '6px' };
 const calculationFormulaStyle = { color: '#333', fontSize: '15px', fontWeight: 'bold' };
 const calculationNoteStyle = { color: '#999', fontSize: '12px' };
-const violationTextStyle = { width: '120px', textAlign: 'right', color: '#e11d48', fontSize: '14px', fontWeight: 'bold' };
+const violationTextStyle = { flex: '0 0 auto', marginLeft: 'auto', textAlign: 'right', color: '#e11d48', fontSize: '14px', fontWeight: 'bold', whiteSpace: 'nowrap' };
 
 const faqSectionStyle = { marginTop: '60px' };
 const sectionLabelStyle = { margin: '0 0 16px', color: '#111', fontSize: '18px', fontWeight: 'bold' };
@@ -522,7 +600,7 @@ const faqArrowStyle = { color: '#ccc', fontSize: '15px' };
 const faqAnswerStyle = { margin: '12px 0 0 0', color: '#666', fontSize: '14px', lineHeight: '1.6' };
 
 const footerTextStyle = { color: '#888', fontSize: '14px' };
-const footerButtonStyle = { padding: '12px 24px', backgroundColor: '#f1f5f9', border: 'none', borderRadius: '6px', color: '#555', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' };
+const footerButtonStyle = { flexShrink: 0, padding: '12px 24px', backgroundColor: '#f1f5f9', border: 'none', borderRadius: '6px', color: '#555', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold' };
 
 const modalOverlayStyle = { position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.4)' };
 

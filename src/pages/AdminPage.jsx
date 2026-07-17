@@ -3,10 +3,10 @@ import React, {
     useMemo,
     useState
 } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
     getAdminReviewDetail,
     getAdminReviews,
+    getAdminStats,
     updateAdminReviewStatus
 } from '../api/reviews';
 import { REVIEW_INDICATORS } from '../constants/reviewIndicators';
@@ -200,15 +200,17 @@ const PdfPlaceholderIcon = () => (
 );
 
 const AdminPage = () => {
-    const navigate = useNavigate();
     const isMobile = useIsMobile();
     const [reviews, setReviews] = useState([]);
+    const [stats, setStats] = useState(null);
     const [activeStatus, setActiveStatus] = useState('PENDING');
     const [selectedReviewId, setSelectedReviewId] =
         useState('');
     const [selectedReview, setSelectedReview] =
         useState(null);
     const [isListLoading, setIsListLoading] = useState(true);
+    const [isStatsLoading, setIsStatsLoading] =
+        useState(true);
     const [isDetailLoading, setIsDetailLoading] =
         useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
@@ -238,18 +240,45 @@ const AdminPage = () => {
         }
     };
 
+    const loadStats = async () => {
+        setIsStatsLoading(true);
+
+        try {
+            const data = await getAdminStats();
+            setStats(data);
+        } catch (error) {
+            console.error(
+                '관리자 통계를 불러오지 못했습니다.',
+                error
+            );
+            setErrorMessage((current) =>
+                current ||
+                ([401, 403].includes(
+                    error?.response?.status
+                )
+                    ? '관리자 인증이 만료되었거나 권한을 확인할 수 없습니다. 다시 로그인한 뒤 시도해 주세요.'
+                    : '관리자 통계를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.')
+            );
+        } finally {
+            setIsStatsLoading(false);
+        }
+    };
+
     useEffect(() => {
         let isMounted = true;
 
-        const fetchReviews = async () => {
+        const fetchDashboard = async () => {
             if (!isMounted) {
                 return;
             }
 
-            await loadReviews();
+            await Promise.all([
+                loadReviews(),
+                loadStats()
+            ]);
         };
 
-        fetchReviews();
+        fetchDashboard();
 
         return () => {
             isMounted = false;
@@ -271,6 +300,11 @@ const AdminPage = () => {
         reviewsByStatus[activeStatus] || [];
 
     useEffect(() => {
+        if (!selectedReviewId) {
+            setSelectedReview(null);
+            return;
+        }
+
         if (!visibleReviews.length) {
             setSelectedReviewId('');
             setSelectedReview(null);
@@ -284,9 +318,8 @@ const AdminPage = () => {
         );
 
         if (!stillVisible) {
-            setSelectedReviewId(
-                visibleReviews[0].reviewId
-            );
+            setSelectedReviewId('');
+            setSelectedReview(null);
         }
     }, [activeStatus, selectedReviewId, visibleReviews]);
 
@@ -376,7 +409,11 @@ const AdminPage = () => {
             });
 
             setSelectedReview(null);
-            await loadReviews();
+            setSelectedReviewId('');
+            await Promise.all([
+                loadReviews(),
+                loadStats()
+            ]);
         } catch (error) {
             console.error(
                 '관리자 상태 변경에 실패했습니다.',
@@ -400,6 +437,49 @@ const AdminPage = () => {
     const violationSet = new Set(
         selectedReview?.violationItems || []
     );
+    const statsCards = [
+        {
+            key: 'totalReviews',
+            label: '전체 리뷰 수',
+            value: stats?.totalReviews ?? 0,
+            description: '등록된 전체 후기 수',
+            accentColor: '#1F3B8A'
+        },
+        {
+            key: 'pendingReviews',
+            label: '검수 대기 리뷰 수',
+            value: stats?.pendingReviews ?? 0,
+            description: '아직 검수하지 않은 후기',
+            accentColor: '#FF8A3D'
+        },
+        {
+            key: 'approvedReviews',
+            label: '승인 리뷰 수',
+            value: stats?.approvedReviews ?? 0,
+            description: '지도 반영이 가능한 승인 후기',
+            accentColor: '#22B35B'
+        },
+        {
+            key: 'rejectedReviews',
+            label: '반려 리뷰 수',
+            value: stats?.rejectedReviews ?? 0,
+            description: '보완이 필요한 반려 후기',
+            accentColor: '#FF5A57'
+        },
+        {
+            key: 'totalWorkspaces',
+            label: '전체 사업장 수',
+            value: stats?.totalWorkspaces ?? 0,
+            description: '관리 대상 사업장 수',
+            accentColor: '#5A6475'
+        }
+    ];
+    const activeTabMeta = getStatusMeta(activeStatus);
+
+    const handleSelectReview = (review) => {
+        setSelectedReviewId(review.reviewId);
+        setSelectedReview(review);
+    };
 
     return (
         <div style={pageStyle}>
@@ -417,9 +497,7 @@ const AdminPage = () => {
                     <div
                         style={{
                             ...statusTabsStyle,
-                            flexWrap: isMobile
-                                ? 'wrap'
-                                : 'nowrap'
+                            flexWrap: 'nowrap'
                         }}
                     >
                         {STATUS_TABS.map((tab) => {
@@ -435,6 +513,9 @@ const AdminPage = () => {
                                     }
                                     style={{
                                         ...statusTabStyle,
+                                        ...(isMobile
+                                            ? mobileStatusTabStyle
+                                            : {}),
                                         backgroundColor:
                                             isActive
                                                 ? '#4668EC'
@@ -444,14 +525,16 @@ const AdminPage = () => {
                                             : '#5F6775'
                                     }}
                                 >
-                                    {tab.label}{' '}
-                                    (
-                                    {
-                                        reviewsByStatus[
-                                            tab.key
-                                        ]?.length
-                                    }
-                                    )
+                                    <span>{tab.label}</span>
+                                    <span>
+                                        (
+                                        {
+                                            reviewsByStatus[
+                                                tab.key
+                                            ]?.length
+                                        }
+                                        )
+                                    </span>
                                 </button>
                             );
                         })}
@@ -480,16 +563,16 @@ const AdminPage = () => {
                                     );
 
                                 return (
-                                    <button
-                                        type="button"
-                                        key={review.reviewId}
-                                        onClick={() =>
-                                            setSelectedReviewId(
-                                                review.reviewId
-                                            )
-                                        }
-                                        style={{
-                                            ...listItemStyle,
+                                        <button
+                                            type="button"
+                                            key={review.reviewId}
+                                            onClick={() =>
+                                                handleSelectReview(
+                                                    review
+                                                )
+                                            }
+                                            style={{
+                                                ...listItemStyle,
                                             borderColor:
                                                 isSelected
                                                     ? '#4668EC'
@@ -573,12 +656,133 @@ const AdminPage = () => {
                         </p>
                     )}
 
-                    {!selectedReview ? (
-                        <div style={detailEmptyCardStyle}>
-                            검수할 후기를 선택해 주세요.
-                        </div>
+                    {!selectedReviewId ? (
+                        <>
+                            <article
+                                style={dashboardHeroCardStyle}
+                            >
+                                <div
+                                    style={
+                                        dashboardHeroTopStyle
+                                    }
+                                >
+                                    <div>
+                                        <span
+                                            style={
+                                                dashboardEyebrowStyle
+                                            }
+                                        >
+                                            관리자 통계
+                                        </span>
+                                        <h1
+                                            style={
+                                                dashboardTitleStyle
+                                            }
+                                        >
+                                            리뷰 검수 현황
+                                        </h1>
+                                    </div>
+
+                                    <span
+                                        style={{
+                                            ...dashboardStatusChipStyle,
+                                            color: activeTabMeta.accentColor,
+                                            backgroundColor:
+                                                activeTabMeta.softColor
+                                        }}
+                                    >
+                                        현재 목록
+                                        {' '}
+                                        {activeTabMeta.label}
+                                    </span>
+                                </div>
+
+                                <p
+                                    style={
+                                        dashboardDescriptionStyle
+                                    }
+                                >
+                                    처음 진입 시에는 전체
+                                    검수 현황을 보여주고,
+                                    왼쪽 목록에서 사업장을
+                                    선택하면 상세 검수 화면으로
+                                    전환됩니다.
+                                </p>
+                            </article>
+
+                            <div
+                                style={{
+                                    ...statsGridStyle,
+                                    gridTemplateColumns:
+                                        isMobile
+                                            ? '1fr'
+                                            : 'repeat(2, minmax(0, 1fr))'
+                                }}
+                            >
+                                {statsCards.map((card) => (
+                                    <article
+                                        key={card.key}
+                                        style={{
+                                            ...statsCardStyle,
+                                            borderTopColor:
+                                                card.accentColor
+                                        }}
+                                    >
+                                        <span
+                                            style={
+                                                statsLabelStyle
+                                            }
+                                        >
+                                            {card.label}
+                                        </span>
+                                        <strong
+                                            style={{
+                                                ...statsValueStyle,
+                                                color: card.accentColor
+                                            }}
+                                        >
+                                            {isStatsLoading
+                                                ? '...'
+                                                : `${card.value}개`}
+                                        </strong>
+                                        <p
+                                            style={
+                                                statsDescriptionStyle
+                                            }
+                                        >
+                                            {
+                                                card.description
+                                            }
+                                        </p>
+                                    </article>
+                                ))}
+                            </div>
+                        </>
                     ) : (
                         <>
+                            <div
+                                style={
+                                    detailBackRowStyle
+                                }
+                            >
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setSelectedReviewId(
+                                            ''
+                                        );
+                                        setSelectedReview(
+                                            null
+                                        );
+                                    }}
+                                    style={
+                                        dashboardBackButtonStyle
+                                    }
+                                >
+                                    전체 통계 보기
+                                </button>
+                            </div>
+
                             <article style={summaryCardStyle}>
                                 <div style={summaryHeaderStyle}>
                                     <div>
@@ -967,8 +1171,11 @@ const AdminPage = () => {
 };
 
 const pageStyle = {
+    height: '100vh',
     minHeight: '100vh',
-    backgroundColor: '#F6F8FB'
+    backgroundColor: '#F6F8FB',
+    overflowY: 'auto',
+    overflowX: 'hidden'
 };
 
 const headerStyle = {
@@ -1029,13 +1236,15 @@ const profileCircleStyle = {
 
 const mainStyle = {
     display: 'grid',
-    minHeight: 'calc(100vh - 64px)'
+    minHeight: 'calc(100vh - 64px)',
+    width: '100%',
+    alignItems: 'start'
 };
 
 const sidebarStyle = {
     borderRight: '1px solid #E8ECF2',
     backgroundColor: '#FFFFFF',
-    overflow: 'hidden'
+    overflow: 'visible'
 };
 
 const statusTabsStyle = {
@@ -1046,13 +1255,28 @@ const statusTabsStyle = {
 
 const statusTabStyle = {
     minWidth: '72px',
-    height: '30px',
+    minHeight: '30px',
     padding: '0 12px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     border: 'none',
     borderRadius: '8px',
     cursor: 'pointer',
     fontSize: '13px',
-    fontWeight: '800'
+    fontWeight: '800',
+    lineHeight: '1.25',
+    textAlign: 'center',
+    wordBreak: 'keep-all',
+    whiteSpace: 'normal',
+    flex: '1 1 0'
+};
+
+const mobileStatusTabStyle = {
+    minHeight: '60px',
+    padding: '8px 10px',
+    flexDirection: 'column',
+    gap: '2px'
 };
 
 const listWrapStyle = {
@@ -1122,6 +1346,110 @@ const detailAreaStyle = {
     flexDirection: 'column',
     gap: '12px',
     boxSizing: 'border-box'
+};
+
+const dashboardHeroCardStyle = {
+    padding: '22px 22px 20px',
+    border: '1px solid #E8ECF2',
+    borderRadius: '18px',
+    backgroundColor: '#FFFFFF',
+    boxShadow: '0 8px 20px rgba(30, 41, 59, 0.04)'
+};
+
+const dashboardHeroTopStyle = {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: '16px',
+    flexWrap: 'wrap'
+};
+
+const dashboardEyebrowStyle = {
+    display: 'inline-block',
+    marginBottom: '10px',
+    color: '#8B94A3',
+    fontSize: '12px',
+    fontWeight: '800',
+    letterSpacing: '0.04em'
+};
+
+const dashboardTitleStyle = {
+    margin: 0,
+    color: '#18202D',
+    fontSize: '24px',
+    fontWeight: '900',
+    letterSpacing: '-0.4px'
+};
+
+const dashboardStatusChipStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    minHeight: '30px',
+    padding: '0 12px',
+    borderRadius: '999px',
+    fontSize: '12px',
+    fontWeight: '800'
+};
+
+const dashboardDescriptionStyle = {
+    margin: '16px 0 0',
+    color: '#667084',
+    fontSize: '14px',
+    lineHeight: '1.75'
+};
+
+const statsGridStyle = {
+    display: 'grid',
+    gap: '12px'
+};
+
+const statsCardStyle = {
+    padding: '18px 18px 16px',
+    border: '1px solid #E8ECF2',
+    borderTop: '4px solid #1F3B8A',
+    borderRadius: '16px',
+    backgroundColor: '#FFFFFF',
+    boxShadow: '0 8px 20px rgba(30, 41, 59, 0.04)'
+};
+
+const statsLabelStyle = {
+    display: 'block',
+    color: '#8F98A5',
+    fontSize: '13px',
+    fontWeight: '700'
+};
+
+const statsValueStyle = {
+    display: 'block',
+    marginTop: '10px',
+    fontSize: '30px',
+    fontWeight: '900',
+    lineHeight: 1.1,
+    letterSpacing: '-0.5px'
+};
+
+const statsDescriptionStyle = {
+    margin: '12px 0 0',
+    color: '#98A1AE',
+    fontSize: '12px',
+    lineHeight: '1.6'
+};
+
+const detailBackRowStyle = {
+    display: 'flex',
+    justifyContent: 'flex-end'
+};
+
+const dashboardBackButtonStyle = {
+    minHeight: '32px',
+    padding: '0 12px',
+    border: '1px solid #D7DEE8',
+    borderRadius: '999px',
+    backgroundColor: '#FFFFFF',
+    color: '#5C6574',
+    cursor: 'pointer',
+    fontSize: '12px',
+    fontWeight: '700'
 };
 
 const errorTextStyle = {

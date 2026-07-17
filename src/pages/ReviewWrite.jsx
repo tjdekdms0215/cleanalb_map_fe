@@ -230,8 +230,21 @@ const buildResolveWorkspacePayload = (workspace) => ({
     )
 });
 
+const buildFileSignature = (file) =>
+    [
+        file.name,
+        file.size,
+        file.lastModified,
+        file.type || ''
+    ].join(':');
+
 const createEvidenceItem = (file) => ({
-    id: `${file.name}-${file.size}-${file.lastModified}`,
+    id:
+        window.crypto?.randomUUID?.() ||
+        `${Date.now()}-${Math.random()
+            .toString(36)
+            .slice(2)}`,
+    signature: buildFileSignature(file),
     file,
     isImage: isImageFile(file),
     previewUrl: isImageFile(file)
@@ -885,9 +898,11 @@ const ReviewWrite = () => {
                     return;
                 }
 
-                const nextId = `${normalizedFile.name}-${normalizedFile.size}-${normalizedFile.lastModified}`;
+                const nextSignature =
+                    buildFileSignature(normalizedFile);
                 const isDuplicate = nextItems.some(
-                    (item) => item.id === nextId
+                    (item) =>
+                        item.signature === nextSignature
                 );
 
                 if (isDuplicate) {
@@ -944,6 +959,10 @@ const ReviewWrite = () => {
                 (item) => item.id !== itemId
             );
         });
+        setUploadMessage('');
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
     };
 
     const openPurifyModal = async () => {

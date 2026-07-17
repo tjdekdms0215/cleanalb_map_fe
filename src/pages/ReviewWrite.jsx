@@ -31,8 +31,15 @@ const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
 const ALLOWED_FILE_EXTENSIONS = [
     'jpg',
     'jpeg',
+    'jfif',
     'png',
     'pdf'
+];
+const JPEG_EXTENSIONS = ['jpg', 'jpeg', 'jfif'];
+const JPEG_MIME_TYPES = [
+    'image/jpeg',
+    'image/jpg',
+    'image/pjpeg'
 ];
 
 const PURIFY_OPTIONS = [
@@ -96,13 +103,47 @@ const formatFileSize = (bytes) => {
 const getFileExtension = (fileName = '') =>
     fileName.split('.').pop()?.toLowerCase() || '';
 
+const isJpegLikeFile = (file) => {
+    const extension = getFileExtension(file.name);
+    const mimeType = String(file.type || '').toLowerCase();
+
+    return (
+        JPEG_EXTENSIONS.includes(extension) ||
+        JPEG_MIME_TYPES.includes(mimeType)
+    );
+};
+
+const normalizeEvidenceFile = (file) => {
+    if (!isJpegLikeFile(file)) {
+        return file;
+    }
+
+    const hasExtension = /\.[^.]+$/.test(file.name);
+    const normalizedName = hasExtension
+        ? file.name.replace(/\.[^.]+$/i, '.jpg')
+        : `${file.name}.jpg`;
+
+    if (
+        file.name === normalizedName &&
+        file.type === 'image/jpeg'
+    ) {
+        return file;
+    }
+
+    return new File([file], normalizedName, {
+        type: 'image/jpeg',
+        lastModified: file.lastModified
+    });
+};
+
 const isAllowedEvidenceFile = (file) => {
     const extension = getFileExtension(file.name);
+    const mimeType = String(file.type || '').toLowerCase();
 
     return (
         ALLOWED_FILE_EXTENSIONS.includes(extension) ||
-        ['image/jpeg', 'image/png', 'application/pdf'].includes(
-            file.type
+        [...JPEG_MIME_TYPES, 'image/png', 'application/pdf'].includes(
+            mimeType
         )
     );
 };
@@ -787,21 +828,27 @@ const ReviewWrite = () => {
             const nextItems = [...current];
 
             Array.from(files).forEach((file) => {
-                if (!isAllowedEvidenceFile(file)) {
+                const normalizedFile =
+                    normalizeEvidenceFile(file);
+
+                if (!isAllowedEvidenceFile(normalizedFile)) {
                     warnings.push(
                         `${file.name}은(는) JPG, JPEG, PNG, PDF만 업로드할 수 있습니다.`
                     );
                     return;
                 }
 
-                if (file.size > MAX_FILE_SIZE_BYTES) {
+                if (
+                    normalizedFile.size >
+                    MAX_FILE_SIZE_BYTES
+                ) {
                     warnings.push(
                         `${file.name}은(는) 10MB 이하 파일만 업로드할 수 있습니다.`
                     );
                     return;
                 }
 
-                const nextId = `${file.name}-${file.size}-${file.lastModified}`;
+                const nextId = `${normalizedFile.name}-${normalizedFile.size}-${normalizedFile.lastModified}`;
                 const isDuplicate = nextItems.some(
                     (item) => item.id === nextId
                 );
@@ -820,7 +867,9 @@ const ReviewWrite = () => {
                     return;
                 }
 
-                nextItems.push(createEvidenceItem(file));
+                nextItems.push(
+                    createEvidenceItem(normalizedFile)
+                );
             });
 
             return nextItems;

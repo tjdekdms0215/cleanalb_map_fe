@@ -1242,32 +1242,32 @@ const detailAreaStyle = {
 
 const adminStatsGridStyle = {
     display: 'grid',
-    gap: '10px'
+    gap: '8px'
 };
 
 const adminStatsCardStyle = {
-    minHeight: '72px',
-    padding: '14px 14px 12px',
+    minHeight: '58px',
+    padding: '10px 10px 9px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     border: '1px solid #E7EBF2',
-    borderRadius: '10px',
+    borderRadius: '2px',
     backgroundColor: '#FFFFFF',
     boxSizing: 'border-box'
 };
 
 const adminStatsLabelStyle = {
     color: '#8E96A3',
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '700',
-    lineHeight: '1.5',
+    lineHeight: '1.35',
     wordBreak: 'keep-all'
 };
 
 const adminStatsValueStyle = {
     color: '#1F2937',
-    fontSize: '24px',
+    fontSize: '19px',
     fontWeight: '900',
     lineHeight: 1.1,
     letterSpacing: '-0.4px'

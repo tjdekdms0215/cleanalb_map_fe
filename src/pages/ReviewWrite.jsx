@@ -41,6 +41,12 @@ const JPEG_MIME_TYPES = [
     'image/jpg',
     'image/pjpeg'
 ];
+const PDF_EXTENSIONS = ['pdf'];
+const PDF_MIME_TYPES = [
+    'application/pdf',
+    'application/x-pdf',
+    'application/acrobat'
+];
 
 const PURIFY_OPTIONS = [
     {
@@ -113,27 +119,56 @@ const isJpegLikeFile = (file) => {
     );
 };
 
+const isPdfLikeFile = (file) => {
+    const extension = getFileExtension(file.name);
+    const mimeType = String(file.type || '').toLowerCase();
+
+    return (
+        PDF_EXTENSIONS.includes(extension) ||
+        PDF_MIME_TYPES.includes(mimeType)
+    );
+};
+
 const normalizeEvidenceFile = (file) => {
-    if (!isJpegLikeFile(file)) {
-        return file;
+    if (isJpegLikeFile(file)) {
+        const hasExtension = /\.[^.]+$/.test(file.name);
+        const normalizedName = hasExtension
+            ? file.name.replace(/\.[^.]+$/i, '.jpg')
+            : `${file.name}.jpg`;
+
+        if (
+            file.name === normalizedName &&
+            file.type === 'image/jpeg'
+        ) {
+            return file;
+        }
+
+        return new File([file], normalizedName, {
+            type: 'image/jpeg',
+            lastModified: file.lastModified
+        });
     }
 
-    const hasExtension = /\.[^.]+$/.test(file.name);
-    const normalizedName = hasExtension
-        ? file.name.replace(/\.[^.]+$/i, '.jpg')
-        : `${file.name}.jpg`;
+    if (isPdfLikeFile(file)) {
+        const hasExtension = /\.[^.]+$/.test(file.name);
+        const normalizedName = hasExtension
+            ? file.name.replace(/\.[^.]+$/i, '.pdf')
+            : `${file.name}.pdf`;
 
-    if (
-        file.name === normalizedName &&
-        file.type === 'image/jpeg'
-    ) {
-        return file;
+        if (
+            file.name === normalizedName &&
+            file.type === 'application/pdf'
+        ) {
+            return file;
+        }
+
+        return new File([file], normalizedName, {
+            type: 'application/pdf',
+            lastModified: file.lastModified
+        });
     }
 
-    return new File([file], normalizedName, {
-        type: 'image/jpeg',
-        lastModified: file.lastModified
-    });
+    return file;
 };
 
 const isAllowedEvidenceFile = (file) => {
@@ -142,7 +177,11 @@ const isAllowedEvidenceFile = (file) => {
 
     return (
         ALLOWED_FILE_EXTENSIONS.includes(extension) ||
-        [...JPEG_MIME_TYPES, 'image/png', 'application/pdf'].includes(
+        [
+            ...JPEG_MIME_TYPES,
+            ...PDF_MIME_TYPES,
+            'image/png'
+        ].includes(
             mimeType
         )
     );

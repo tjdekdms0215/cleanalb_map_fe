@@ -657,7 +657,7 @@ const fetchWorkspaces = async (keyword = '') => {
                         <div style={searchContainerStyle}>
                             <input
                                 type="text"
-                                placeholder="사업장 이름 검색"
+                                placeholder="사업장 이름 및 원하는 조건 검색"
                                 value={searchTerm}
                                 onChange={(event) =>
                                     setSearchTerm(event.target.value)
@@ -674,6 +674,10 @@ const fetchWorkspaces = async (keyword = '') => {
                             >
                                 🔍
                             </button>
+                        </div>
+
+                        <div style={searchExampleTextStyle}>
+                            ex)클린점수 60점 넘는 상대 카페 추천해줘
                         </div>
                     </div>
 

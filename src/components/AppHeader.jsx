@@ -244,10 +244,12 @@ const headerStyle = {
 };
 
 const mobileHeaderStyle = {
-    minHeight: 'auto',
-    padding: '10px 14px',
-    alignItems: 'stretch',
-    gap: '8px'
+    minHeight: '56px',
+    padding: '8px 10px',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '6px',
+    flexWrap: 'nowrap'
 };
 
 const headerLeftStyle = {
@@ -258,8 +260,11 @@ const headerLeftStyle = {
 };
 
 const mobileHeaderLeftStyle = {
-    width: '100%',
-    gap: '6px'
+    flex: '1 1 auto',
+    minWidth: 0,
+    width: 'auto',
+    gap: '4px',
+    flexWrap: 'nowrap'
 };
 
 const headerRightStyle = {
@@ -271,9 +276,10 @@ const headerRightStyle = {
 };
 
 const mobileHeaderRightStyle = {
-    width: '100%',
+    width: 'auto',
     justifyContent: 'flex-end',
-    gap: '6px'
+    gap: '4px',
+    flexShrink: 0
 };
 
 const logoBtnStyle = {
@@ -286,7 +292,8 @@ const logoBtnStyle = {
 };
 
 const mobileLogoBtnStyle = {
-    fontSize: '14px'
+    fontSize: '13px',
+    whiteSpace: 'nowrap'
 };
 
 const navBtnStyle = {
@@ -300,8 +307,9 @@ const navBtnStyle = {
 };
 
 const mobileNavBtnStyle = {
-    padding: '5px 6px',
-    fontSize: '11px'
+    padding: '4px 5px',
+    fontSize: '10.5px',
+    whiteSpace: 'nowrap'
 };
 
 const btnStyle = {
@@ -315,9 +323,10 @@ const btnStyle = {
 };
 
 const mobileActionBtnStyle = {
-    minHeight: '30px',
-    padding: '5px 8px',
-    fontSize: '11px'
+    minHeight: '26px',
+    padding: '4px 7px',
+    fontSize: '10px',
+    borderRadius: '5px'
 };
 
 const adminBtnStyle = {
@@ -376,16 +385,17 @@ const kakaoLoginBtnStyle = {
 };
 
 const mobileKakaoLoginBtnStyle = {
-    minWidth: '118px',
+    minWidth: '0',
     width: 'auto',
-    height: '32px',
-    padding: '0 10px',
-    gap: '6px'
+    height: '26px',
+    padding: '0 7px',
+    gap: '4px',
+    borderRadius: '5px'
 };
 
 const mobileKakaoLogoStyle = {
-    width: '18px',
-    height: '18px'
+    width: '14px',
+    height: '14px'
 };
 
 const kakaoLogoStyle = {
@@ -403,7 +413,7 @@ const kakaoLoginTextStyle = {
 };
 
 const mobileKakaoLoginTextStyle = {
-    fontSize: '12px',
+    fontSize: '10px',
     fontWeight: '700'
 };
 

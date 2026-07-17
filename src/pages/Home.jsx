@@ -1601,12 +1601,12 @@ const popupStyle = {
 };
 
 const mobilePopupStyle = {
-    width: '286px',
-    maxWidth: 'calc(100% - 40px)',
-    height: '378px',
-    minHeight: '378px',
-    maxHeight: '378px',
-    padding: '14px 14px 12px'
+    width: '244px',
+    maxWidth: 'calc(100% - 48px)',
+    height: '252px',
+    minHeight: '252px',
+    maxHeight: '252px',
+    padding: '10px 10px 9px'
 };
 
 const popupCloseBtnStyle = {
@@ -1632,11 +1632,11 @@ const popupCloseBtnStyle = {
 };
 
 const mobilePopupCloseBtnStyle = {
-    top: '10px',
-    right: '10px',
-    width: '24px',
-    height: '24px',
-    fontSize: '14px'
+    top: '8px',
+    right: '8px',
+    width: '20px',
+    height: '20px',
+    fontSize: '12px'
 };
 
 const statusBadgeRowStyle = {
@@ -1649,9 +1649,9 @@ const statusBadgeRowStyle = {
 };
 
 const mobileStatusBadgeRowStyle = {
-    minHeight: '24px',
-    marginBottom: '8px',
-    paddingRight: '28px'
+    minHeight: '20px',
+    marginBottom: '6px',
+    paddingRight: '22px'
 };
 
 const tagStatusStyle = {
@@ -1671,9 +1671,9 @@ const tagStatusStyle = {
 };
 
 const mobileTagStatusStyle = {
-    minWidth: '42px',
-    padding: '5px 8px',
-    fontSize: '11px'
+    minWidth: '38px',
+    padding: '4px 6px',
+    fontSize: '10px'
 };
 
 const popupStoreNameStyle = {
@@ -1692,10 +1692,10 @@ const popupStoreNameStyle = {
 };
 
 const mobilePopupStoreNameStyle = {
-    margin: '0 0 4px',
-    paddingRight: '22px',
-    fontSize: '16px',
-    lineHeight: '1.2'
+    margin: '0 0 3px',
+    paddingRight: '16px',
+    fontSize: '13px',
+    lineHeight: '1.15'
 };
 
 const popupMetaStyle = {
@@ -1713,8 +1713,8 @@ const popupMetaStyle = {
 
 const mobilePopupMetaStyle = {
     gap: '4px',
-    margin: '0 0 10px',
-    fontSize: '10px'
+    margin: '0 0 7px',
+    fontSize: '9px'
 };
 
 const metaDividerStyle = {
@@ -1735,9 +1735,9 @@ const grayBoxStyle = {
 };
 
 const mobileGrayBoxStyle = {
-    gap: '6px',
-    marginBottom: '8px',
-    padding: '9px 10px'
+    gap: '4px',
+    marginBottom: '6px',
+    padding: '7px 8px'
 };
 
 const tintedBoxStyle = {
@@ -1754,8 +1754,8 @@ const tintedBoxStyle = {
 };
 
 const mobileTintedBoxStyle = {
-    gap: '6px',
-    padding: '9px 10px'
+    gap: '4px',
+    padding: '7px 8px'
 };
 
 const boxRowStyle = {
@@ -1770,9 +1770,9 @@ const boxRowStyle = {
 };
 
 const mobileBoxRowStyle = {
-    gap: '8px',
-    fontSize: '10px',
-    lineHeight: '1.35'
+    gap: '6px',
+    fontSize: '9px',
+    lineHeight: '1.25'
 };
 
 const boxLabelStyle = {
@@ -1783,8 +1783,8 @@ const boxLabelStyle = {
 };
 
 const mobileBoxLabelStyle = {
-    minWidth: '50px',
-    fontSize: '10px'
+    minWidth: '42px',
+    fontSize: '9px'
 };
 
 const boxValueStyle = {
@@ -1793,7 +1793,7 @@ const boxValueStyle = {
 };
 
 const mobileBoxValueStyle = {
-    fontSize: '12px'
+    fontSize: '10px'
 };
 
 const boxTextStyle = {
@@ -1808,8 +1808,8 @@ const boxTextStyle = {
 };
 
 const mobileBoxTextStyle = {
-    fontSize: '10px',
-    lineHeight: '1.35'
+    fontSize: '9px',
+    lineHeight: '1.25'
 };
 
 const popupSummaryTextStyle = {
@@ -1838,7 +1838,7 @@ const evidenceHeadingStyle = {
 };
 
 const mobileEvidenceHeadingStyle = {
-    fontSize: '10px'
+    fontSize: '9px'
 };
 
 const evidenceItemsGridStyle = {
@@ -1849,8 +1849,8 @@ const evidenceItemsGridStyle = {
 
 const mobileEvidenceItemsGridStyle = {
     display: 'grid',
-    gridTemplateColumns: '1fr',
-    gap: '5px'
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gap: '4px'
 };
 
 const evidenceItemStyle = {
@@ -1864,9 +1864,9 @@ const evidenceItemStyle = {
 };
 
 const mobileEvidenceItemStyle = {
-    minHeight: '34px',
-    padding: '5px 6px',
-    gap: '6px'
+    minHeight: '28px',
+    padding: '4px 5px',
+    gap: '4px'
 };
 
 const evidenceTypeBadgeStyle = {
@@ -1882,9 +1882,9 @@ const evidenceTypeBadgeStyle = {
 };
 
 const mobileEvidenceTypeBadgeStyle = {
-    width: '16px',
-    height: '16px',
-    fontSize: '8px'
+    width: '14px',
+    height: '14px',
+    fontSize: '7px'
 };
 
 const evidenceContentStyle = {
@@ -1911,8 +1911,8 @@ const evidenceTextStyle = {
 };
 
 const mobileEvidenceTextStyle = {
-    fontSize: '10px',
-    lineHeight: '1.2'
+    fontSize: '8.5px',
+    lineHeight: '1.1'
 };
 
 const evidenceFallbackTextStyle = {
@@ -1951,7 +1951,7 @@ const detailButtonAreaStyle = {
 };
 
 const mobileDetailButtonAreaStyle = {
-    paddingTop: '10px'
+    paddingTop: '7px'
 };
 
 const modernDetailBtnStyle = {
@@ -1972,14 +1972,14 @@ const modernDetailBtnStyle = {
 const mobileModernDetailBtnStyle = {
     width: '100%',
     justifyContent: 'center',
-    padding: '8px 10px',
-    fontSize: '11px'
+    padding: '6px 8px',
+    fontSize: '9.5px'
 };
 
 const mobilePopupSummaryTextStyle = {
     ...mobileBoxTextStyle,
-    minHeight: '2.7em',
-    maxHeight: '2.7em'
+    minHeight: '2.5em',
+    maxHeight: '2.5em'
 };
 
 const closeIconBtnStyle = {

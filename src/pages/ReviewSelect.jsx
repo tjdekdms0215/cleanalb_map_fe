@@ -173,8 +173,22 @@ const ReviewSelect = () => {
                         </p>
                     </div>
 
-                    <div style={searchCardStyle}>
-                        <div style={searchTopStyle}>
+                    <div
+                        style={{
+                            ...searchCardStyle,
+                            ...(isMobile
+                                ? mobileSearchCardStyle
+                                : null)
+                        }}
+                    >
+                        <div
+                            style={{
+                                ...searchTopStyle,
+                                ...(isMobile
+                                    ? mobileSearchTopStyle
+                                    : null)
+                            }}
+                        >
                             <form
                                 onSubmit={handleSearch}
                                 style={{
@@ -475,8 +489,8 @@ const mainStyle = {
 };
 
 const mobileMainStyle = {
-    padding: '28px 14px 36px',
-    justifyContent: 'flex-start'
+    padding: '28px 14px 42px',
+    justifyContent: 'center'
 };
 
 const contentSectionStyle = {
@@ -488,7 +502,8 @@ const contentSectionStyle = {
 };
 
 const mobileContentSectionStyle = {
-    maxWidth: '100%'
+    maxWidth: '420px',
+    margin: '0 auto'
 };
 
 const titleAreaStyle = {
@@ -518,9 +533,20 @@ const searchCardStyle = {
     boxSizing: 'border-box'
 };
 
+const mobileSearchCardStyle = {
+    minHeight: '360px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
+};
+
 const searchTopStyle = {
     padding: '20px',
     boxSizing: 'border-box'
+};
+
+const mobileSearchTopStyle = {
+    padding: '24px 20px 18px'
 };
 
 const searchFormStyle = {

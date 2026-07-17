@@ -284,6 +284,17 @@ const extractApiErrorMessage = (error) => {
     return '';
 };
 
+const isGenericBadRequestMessage = (message = '') =>
+    [
+        'BAD REQUEST',
+        'BADREQUEST',
+        '요청값이 올바르지 않습니다.'
+    ].includes(
+        String(message)
+            .trim()
+            .toUpperCase()
+    );
+
 const normalizeAdminStatus = (value = '') => {
     const normalized = String(value)
         .trim()
@@ -666,9 +677,14 @@ const createReview = async (workspaceId, reviewData) => {
     } catch (error) {
         const statusCode = error?.response?.status;
         const apiMessage = extractApiErrorMessage(error);
+        const finalMessage =
+            statusCode === 400 &&
+            isGenericBadRequestMessage(apiMessage)
+                ? '리뷰 작성 요청이 거절되었습니다. 근무 시간대, 동시간대 업무자 수, 체크리스트 항목을 다시 확인해 주세요.'
+                : apiMessage;
 
         throw new Error(
-            apiMessage ||
+            finalMessage ||
                 (statusCode
                     ? `후기 등록에 실패했습니다. (HTTP ${statusCode})`
                     : '후기 등록에 실패했습니다.')
@@ -737,9 +753,14 @@ export const submitReview = async ({
                 file?.name || '첨부 파일';
             const statusCode = error?.response?.status;
             const apiMessage = extractApiErrorMessage(error);
+            const finalMessage =
+                statusCode === 400 &&
+                isGenericBadRequestMessage(apiMessage)
+                    ? `${fileName} 업로드 요청이 거절되었습니다. 파일 형식(JPG, JPEG, PNG, PDF)과 용량(10MB 이하)을 확인해 주세요.`
+                    : apiMessage;
 
             throw new Error(
-                apiMessage ||
+                finalMessage ||
                     (statusCode
                     ? `${fileName} 업로드에 실패했습니다. (HTTP ${statusCode})`
                     : `${fileName} 업로드에 실패했습니다.`)

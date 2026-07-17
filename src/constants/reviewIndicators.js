@@ -42,6 +42,22 @@ export const REVIEW_INDICATORS = [
         ]
     },
     {
+        id: 'BREAK_TIME',
+        apiValue: 'BREAK_TIME',
+        label: '휴게시간 부족',
+        positiveLabel: '법정 휴게시간 보장',
+        requestKey: 'breakTimeViolation',
+        aliases: [
+            '휴게시간',
+            '휴게시간부족',
+            '법정휴게시간',
+            '법정 휴게시간 미보장',
+            'BREAK_TIME',
+            'BREAKTIME',
+            'BREAKTIMEVIOLATION'
+        ]
+    },
+    {
         id: 'PAY_DELAY',
         apiValue: 'PAY_DELAY',
         label: '급여 지급 지연',
@@ -72,7 +88,7 @@ export const REVIEW_INDICATORS = [
     },
     {
         id: 'SUBSTITUTE_DEMAND',
-        apiValue: 'SUBSTITUTE_DEMAND',
+        apiValue: 'SUBSTITUTE_COERCION',
         label: '반복적이고 지속적인 대타요구 및 강요',
         positiveLabel: '무리한 대타 요구 없음',
         requestKey: 'substituteDemandViolation',
@@ -83,6 +99,8 @@ export const REVIEW_INDICATORS = [
             '반복적이고 지속적인 대타요구 및 강요',
             'SUBSTITUTE_DEMAND',
             'SUBSTITUTEDEMAND',
+            'SUBSTITUTE_COERCION',
+            'SUBSTITUTECOERCION',
             'SUBSTITUTEDEMANDVIOLATION',
             'SUBSTITUTEPRESSUREVIOLATION'
         ]
@@ -203,13 +221,6 @@ export const buildReviewRequestPayload = ({
         {}
     );
 
-    payload.violationItems = REVIEW_INDICATORS.filter(
-        (indicator) => selectedSet.has(indicator.id)
-    ).map(
-        (indicator) =>
-            indicator.apiValue || indicator.id
-    );
-
     if (Number.isInteger(coworkerCount) && coworkerCount >= 0) {
         payload.coworkerCount = coworkerCount;
     }
@@ -225,9 +236,10 @@ export const buildReviewRequestPayload = ({
         payload.timeSlot = timeSlot.trim();
     }
 
-    if (typeof content === 'string' && content.trim()) {
-        payload.content = content.trim();
-    }
+    payload.content =
+        typeof content === 'string'
+            ? content.trim()
+            : '';
 
     return payload;
 };

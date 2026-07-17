@@ -259,7 +259,11 @@ const extractApiErrorMessage = (error) => {
             (item) =>
                 typeof item?.message === 'string' &&
                 item.message.trim()
-        )?.message;
+        )?.message ||
+        Object.values(responseData?.errors || {}).find(
+            (value) =>
+                typeof value === 'string' && value.trim()
+        );
 
     if (fieldErrorMessage) {
         return fieldErrorMessage.trim();
@@ -639,87 +643,25 @@ const fetchAdminReviewPage = async (status) => {
     };
 };
 
-const REVIEW_CREATE_RETRY_STATUSES = [
-    400,
-    404,
-    405,
-    415,
-    422,
-    501
-];
-
-const REVIEW_ATTACHMENT_RETRY_STATUSES = [
-    400,
-    404,
-    405,
-    415,
-    422,
-    501
-];
-
-const buildCreateReviewAttempts = (
-    workspaceId,
-    reviewData
-) => {
-    const payload = {
-        workspaceId,
-        ...reviewData
-    };
-
-    return [
-        {
-            url: '/reviews',
-            data: payload
-        },
-        {
-            url: `/workspaces/${workspaceId}/reviews`,
-            data: payload
-        }
-    ];
-};
-
 const createReview = async (workspaceId, reviewData) => {
-    const attempts = buildCreateReviewAttempts(
-        workspaceId,
-        reviewData
-    );
-    let lastError = null;
+    try {
+        const response = await api.post(
+            `/workspaces/${workspaceId}/reviews`,
+            reviewData
+        );
 
-    for (let index = 0; index < attempts.length; index += 1) {
-        const attempt = attempts[index];
+        return response.data?.data || response.data;
+    } catch (error) {
+        const statusCode = error?.response?.status;
+        const apiMessage = extractApiErrorMessage(error);
 
-        try {
-            const response = await api.post(
-                attempt.url,
-                attempt.data
-            );
-
-            return response.data?.data || response.data;
-        } catch (error) {
-            lastError = error;
-
-            const statusCode = error?.response?.status;
-            const canRetry =
-                index < attempts.length - 1 &&
-                REVIEW_CREATE_RETRY_STATUSES.includes(
-                    statusCode
-                );
-
-            if (!canRetry) {
-                break;
-            }
-        }
+        throw new Error(
+            apiMessage ||
+                (statusCode
+                    ? `후기 등록에 실패했습니다. (HTTP ${statusCode})`
+                    : '후기 등록에 실패했습니다.')
+        );
     }
-
-    const statusCode = lastError?.response?.status;
-    const apiMessage = extractApiErrorMessage(lastError);
-
-    throw new Error(
-        apiMessage ||
-            (statusCode
-                ? `후기 등록에 실패했습니다. (HTTP ${statusCode})`
-                : '후기 등록에 실패했습니다.')
-    );
 };
 
 const resolveCreatedReviewId = (createdReview) =>
@@ -731,74 +673,16 @@ const resolveCreatedReviewId = (createdReview) =>
     createdReview?.data?.review_id ||
     null;
 
-const buildAttachmentUploadAttempts = (
-    reviewId,
-    file
-) => {
-    const endpointCandidates = [
-        `/reviews/${reviewId}/attachments`,
-        `/reviews/${reviewId}/attachment`,
-        `/reviews/${reviewId}/evidences`,
-        `/reviews/${reviewId}/evidence`
-    ];
-    const fieldCandidates = [
-        'file',
-        'attachment',
-        'evidenceFile',
-        'evidence'
-    ];
-
-    return endpointCandidates.flatMap((url) =>
-        fieldCandidates.map((fieldName) => {
-            const formData = new FormData();
-            formData.append(
-                fieldName,
-                file,
-                file.name
-            );
-
-            return {
-                url,
-                data: formData
-            };
-        })
-    );
-};
-
 const uploadReviewAttachment = async (reviewId, file) => {
-    const attempts = buildAttachmentUploadAttempts(
-        reviewId,
-        file
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    const response = await api.post(
+        `/reviews/${reviewId}/attachments`,
+        formData
     );
-    let lastError = null;
 
-    for (let index = 0; index < attempts.length; index += 1) {
-        const attempt = attempts[index];
-
-        try {
-            const response = await api.post(
-                attempt.url,
-                attempt.data
-            );
-
-            return response.data?.data || response.data;
-        } catch (error) {
-            lastError = error;
-
-            const statusCode = error?.response?.status;
-            const canRetry =
-                index < attempts.length - 1 &&
-                REVIEW_ATTACHMENT_RETRY_STATUSES.includes(
-                    statusCode
-                );
-
-            if (!canRetry) {
-                break;
-            }
-        }
-    }
-
-    throw lastError;
+    return response.data?.data || response.data;
 };
 
 export const submitReview = async ({
@@ -816,6 +700,7 @@ export const submitReview = async ({
         workspaceId,
         reviewData
     );
+
     const createdReviewId =
         resolveCreatedReviewId(createdReview);
 

@@ -1,40 +1,12 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/backend/api/(.*)",
-      "destination": "https://cleanalb-map.duckdns.org/api/$1"
+      "src": "^/backend/(.*)$",
+      "dest": "https://cleanalb-map.duckdns.org/$1"
     },
     {
-      "source": "/backend/workspaces/(.*)",
-      "destination": "https://cleanalb-map.duckdns.org/workspaces/$1"
-    },
-    {
-      "source": "/backend/reviews/(.*)",
-      "destination": "https://cleanalb-map.duckdns.org/reviews/$1"
-    },
-    {
-      "source": "/backend/admin/(.*)",
-      "destination": "https://cleanalb-map.duckdns.org/admin/$1"
-    },
-    {
-      "source": "/backend/ai/(.*)",
-      "destination": "https://cleanalb-map.duckdns.org/ai/$1"
-    },
-    {
-      "source": "/backend/recommendations/(.*)",
-      "destination": "https://cleanalb-map.duckdns.org/recommendations/$1"
-    },
-    {
-      "source": "/backend/contracts/(.*)",
-      "destination": "https://cleanalb-map.duckdns.org/contracts/$1"
-    },
-    {
-      "source": "/backend/contract/(.*)",
-      "destination": "https://cleanalb-map.duckdns.org/contract/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "^/(.*)$",
+      "dest": "/index.html"
     }
   ]
 }

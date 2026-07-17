@@ -553,48 +553,54 @@ const Home = () => {
                                         </span>
 
                                         {evidenceSummary?.items?.length ? (
-                                            evidenceSummary.items.map((item) => (
-                                                <div
-                                                    key={item.id}
-                                                    style={evidenceItemStyle}
-                                                >
-                                                    <span
-                                                        style={{
-                                                            ...evidenceTypeBadgeStyle,
-                                                            backgroundColor:
-                                                                evidenceSummary.focus ===
-                                                                'positive'
-                                                                    ? 'rgba(0, 153, 0, 0.12)'
-                                                                    : 'rgba(221, 0, 0, 0.12)',
-                                                            color:
-                                                                evidenceSummary.focus ===
-                                                                'positive'
-                                                                    ? '#08752A'
-                                                                    : '#B30000'
-                                                        }}
-                                                    >
-                                                        {evidenceSummary.focus ===
-                                                        'positive'
-                                                            ? 'O'
-                                                            : 'X'}
-                                                    </span>
-
+                                            <div
+                                                style={
+                                                    evidenceItemsGridStyle
+                                                }
+                                            >
+                                                {evidenceSummary.items.map((item) => (
                                                     <div
-                                                        style={
-                                                            evidenceContentStyle
-                                                        }
+                                                        key={item.id}
+                                                        style={evidenceItemStyle}
                                                     >
-                                                        <strong
+                                                        <span
+                                                            style={{
+                                                                ...evidenceTypeBadgeStyle,
+                                                                backgroundColor:
+                                                                    evidenceSummary.focus ===
+                                                                    'positive'
+                                                                        ? 'rgba(0, 153, 0, 0.12)'
+                                                                        : 'rgba(221, 0, 0, 0.12)',
+                                                                color:
+                                                                    evidenceSummary.focus ===
+                                                                    'positive'
+                                                                        ? '#08752A'
+                                                                        : '#B30000'
+                                                            }}
+                                                        >
+                                                            {evidenceSummary.focus ===
+                                                            'positive'
+                                                                ? 'O'
+                                                                : 'X'}
+                                                        </span>
+
+                                                        <div
                                                             style={
-                                                                evidenceTextStyle
+                                                                evidenceContentStyle
                                                             }
                                                         >
-                                                            {item.shortText ||
-                                                                `${item.label} ${item.metric || ''}`.trim()}
-                                                        </strong>
+                                                            <strong
+                                                                style={
+                                                                    evidenceTextStyle
+                                                                }
+                                                            >
+                                                                {item.shortText ||
+                                                                    `${item.label} ${item.metric || ''}`.trim()}
+                                                            </strong>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))
+                                                ))}
+                                            </div>
                                         ) : (
                                             <span
                                                 style={
@@ -1172,7 +1178,7 @@ const statusBadgeRowStyle = {
     alignItems: 'center',
 
     minHeight: '30px',
-    marginBottom: '16px',
+    marginBottom: '12px',
     paddingRight: '38px'
 };
 
@@ -1197,9 +1203,9 @@ const popupStoreNameStyle = {
     paddingRight: '30px',
 
     color: '#2d2d2d',
-    fontSize: '21px',
+    fontSize: '19px',
     fontWeight: '900',
-    lineHeight: '1.3',
+    lineHeight: '1.25',
     display: '-webkit-box',
     WebkitLineClamp: 2,
     WebkitBoxOrient: 'vertical',
@@ -1213,10 +1219,10 @@ const popupMetaStyle = {
     flexWrap: 'wrap',
 
     gap: '6px',
-    margin: '0 0 18px',
+    margin: '0 0 14px',
 
     color: '#666666',
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '600'
 };
 
@@ -1228,9 +1234,9 @@ const grayBoxStyle = {
     display: 'flex',
     flexDirection: 'column',
 
-    gap: '10px',
-    marginBottom: '12px',
-    padding: '15px 16px',
+    gap: '8px',
+    marginBottom: '10px',
+    padding: '12px 13px',
 
     backgroundColor: 'rgba(255,255,255,0.72)',
     border: '1px solid rgba(214, 221, 232, 0.96)',
@@ -1241,9 +1247,9 @@ const tintedBoxStyle = {
     display: 'flex',
     flexDirection: 'column',
 
-    gap: '10px',
-    marginBottom: '16px',
-    padding: '15px 16px',
+    gap: '8px',
+    marginBottom: '0',
+    padding: '12px 13px',
 
     backgroundColor: 'rgba(255,255,255,0.48)',
     border: '1px solid rgba(214, 221, 232, 0.96)',
@@ -1254,22 +1260,22 @@ const boxRowStyle = {
     display: 'flex',
     alignItems: 'flex-start',
 
-    gap: '12px',
+    gap: '10px',
 
     color: '#333333',
-    fontSize: '13px',
-    lineHeight: '1.55'
+    fontSize: '12px',
+    lineHeight: '1.45'
 };
 
 const boxLabelStyle = {
-    minWidth: '72px',
+    minWidth: '62px',
     color: '#555555',
     fontWeight: '900',
     flexShrink: 0
 };
 
 const boxValueStyle = {
-    fontSize: '15px',
+    fontSize: '14px',
     fontWeight: '900'
 };
 
@@ -1277,9 +1283,9 @@ const boxTextStyle = {
     minWidth: 0,
 
     color: '#333333',
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '500',
-    lineHeight: '1.55',
+    lineHeight: '1.45',
 
     wordBreak: 'keep-all'
 };
@@ -1287,7 +1293,7 @@ const boxTextStyle = {
 const popupSummaryTextStyle = {
     ...boxTextStyle,
     display: '-webkit-box',
-    WebkitLineClamp: 3,
+    WebkitLineClamp: 2,
     WebkitBoxOrient: 'vertical',
     overflow: 'hidden'
 };
@@ -1296,34 +1302,40 @@ const evidenceBlockStyle = {
     minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px'
+    gap: '6px'
 };
 
 const evidenceHeadingStyle = {
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '900',
     letterSpacing: '-0.2px'
+};
+
+const evidenceItemsGridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+    gap: '6px'
 };
 
 const evidenceItemStyle = {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
-    minHeight: '42px',
-    padding: '9px 11px',
+    gap: '7px',
+    minHeight: '34px',
+    padding: '6px 8px',
     border: '1px solid rgba(214, 221, 232, 0.96)',
     backgroundColor: 'rgba(255,255,255,0.86)'
 };
 
 const evidenceTypeBadgeStyle = {
-    width: '22px',
-    height: '22px',
+    width: '18px',
+    height: '18px',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
     borderRadius: '999px',
-    fontSize: '11px',
+    fontSize: '9px',
     fontWeight: '900'
 };
 
@@ -1331,16 +1343,16 @@ const evidenceContentStyle = {
     minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
-    gap: '2px'
+    gap: 0
 };
 
 const evidenceTextStyle = {
     display: 'block',
     minWidth: 0,
     color: '#333333',
-    fontSize: '13px',
+    fontSize: '11px',
     fontWeight: '900',
-    lineHeight: '1.4',
+    lineHeight: '1.25',
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
@@ -1376,11 +1388,13 @@ const evidenceMetricStyle = {
 const detailButtonAreaStyle = {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginTop: '2px'
+    marginTop: 'auto',
+    paddingTop: '12px',
+    flexShrink: 0
 };
 
 const modernDetailBtnStyle = {
-    padding: '11px 16px',
+    padding: '9px 14px',
 
     backgroundColor: 'rgba(255,255,255,0.82)',
     border: 'none',
@@ -1389,7 +1403,8 @@ const modernDetailBtnStyle = {
     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
 
     cursor: 'pointer',
-    fontSize: '13px',
+    fontSize: '12px',
+    lineHeight: '1.2',
     fontWeight: '900'
 };
 

@@ -364,6 +364,19 @@ const buildLegacyWorkerCountReviewData = (
     return nextReviewData;
 };
 
+const buildNoShiftReviewData = (
+    reviewData = {}
+) => {
+    const nextReviewData = {
+        ...reviewData
+    };
+
+    delete nextReviewData.dayType;
+    delete nextReviewData.timeSlot;
+
+    return nextReviewData;
+};
+
 const buildCreateReviewPayloadAttempts = (
     reviewData = {}
 ) => {
@@ -391,6 +404,16 @@ const buildCreateReviewPayloadAttempts = (
     const legacyFullUppercaseEnum =
         buildUppercaseEnumReviewData(
             legacyFullCompatible
+        );
+    const noShift =
+        buildNoShiftReviewData(exact);
+    const noShiftLegacyCompatible =
+        buildLegacyCompatibleReviewData(noShift);
+    const noShiftLegacyWorkerCount =
+        buildLegacyWorkerCountReviewData(noShift);
+    const noShiftLegacyFullCompatible =
+        buildLegacyWorkerCountReviewData(
+            noShiftLegacyCompatible
         );
 
     return [
@@ -425,6 +448,22 @@ const buildCreateReviewPayloadAttempts = (
         {
             label: 'legacy-full-uppercase-enum',
             data: legacyFullUppercaseEnum
+        },
+        {
+            label: 'no-shift',
+            data: noShift
+        },
+        {
+            label: 'no-shift-legacy-compatible',
+            data: noShiftLegacyCompatible
+        },
+        {
+            label: 'no-shift-legacy-worker-count',
+            data: noShiftLegacyWorkerCount
+        },
+        {
+            label: 'no-shift-legacy-full-compatible',
+            data: noShiftLegacyFullCompatible
         }
     ].filter(
         (attempt, index, attempts) =>

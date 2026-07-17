@@ -580,6 +580,7 @@ const ReviewWrite = () => {
     const fileInputRef = useRef(null);
     const evidenceItemsRef = useRef([]);
     const shiftMenuRef = useRef(null);
+    const formErrorRef = useRef(null);
     const isMobile = useIsMobile();
 
     const [authState, setAuthState] = useState(
@@ -881,6 +882,17 @@ const ReviewWrite = () => {
     useEffect(() => {
         evidenceItemsRef.current = evidenceItems;
     }, [evidenceItems]);
+
+    useEffect(() => {
+        if (!formErrorMessage || !formErrorRef.current) {
+            return;
+        }
+
+        formErrorRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }, [formErrorMessage]);
 
     useEffect(
         () => () => {
@@ -1625,7 +1637,11 @@ const ReviewWrite = () => {
                             </div>
 
                             {formErrorMessage && (
-                                <p style={errorTextStyle}>
+                                <p
+                                    ref={formErrorRef}
+                                    role="alert"
+                                    style={errorTextStyle}
+                                >
                                     {formErrorMessage}
                                 </p>
                             )}
@@ -2156,9 +2172,14 @@ const inlineNoticeTextStyle = {
 
 const errorTextStyle = {
     margin: '0 0 14px',
+    padding: '12px 14px',
+    border: '1px solid #ffc9c6',
+    backgroundColor: '#fff4f4',
     color: '#dc4a4a',
     fontSize: '12px',
-    textAlign: 'center'
+    lineHeight: '1.6',
+    textAlign: 'left',
+    boxSizing: 'border-box'
 };
 
 const submitButtonStyle = {

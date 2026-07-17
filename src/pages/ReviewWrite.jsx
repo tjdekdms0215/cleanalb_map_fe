@@ -900,12 +900,6 @@ const ReviewWrite = () => {
         setIsShiftMenuOpen(false);
     };
 
-    const handleResetShiftSelection = () => {
-        setSelectedShiftDay('');
-        setSelectedShiftTime('');
-        setIsShiftMenuOpen(false);
-    };
-
     const toggleViolation = (itemId) => {
         setSelectedViolations((current) =>
             current.includes(itemId)
@@ -1314,33 +1308,6 @@ const ReviewWrite = () => {
                                     ) : null}
                                 </div>
 
-                                {selectedShiftLabel && (
-                                    <div
-                                        style={
-                                            shiftSelectionRowStyle
-                                        }
-                                    >
-                                        <span
-                                            style={
-                                                shiftSelectionChipStyle
-                                            }
-                                        >
-                                            {selectedShiftLabel}
-                                        </span>
-
-                                        <button
-                                            type="button"
-                                            onClick={
-                                                handleResetShiftSelection
-                                            }
-                                            style={
-                                                shiftResetButtonStyle
-                                            }
-                                        >
-                                            선택 초기화
-                                        </button>
-                                    </div>
-                                )}
                             </section>
 
                             <section style={sectionStyle}>
@@ -1914,33 +1881,6 @@ const shiftOptionButtonStyle = {
     cursor: 'pointer',
     fontSize: '13px',
     fontWeight: '700'
-};
-
-const shiftSelectionRowStyle = {
-    marginTop: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    flexWrap: 'wrap'
-};
-
-const shiftSelectionChipStyle = {
-    padding: '8px 12px',
-    borderRadius: '2px',
-    backgroundColor: '#eef3ff',
-    color: '#3158e8',
-    fontSize: '12px',
-    fontWeight: '800'
-};
-
-const shiftResetButtonStyle = {
-    padding: 0,
-    border: 'none',
-    backgroundColor: 'transparent',
-    color: '#8c95a1',
-    fontSize: '12px',
-    fontWeight: '700',
-    cursor: 'pointer'
 };
 
 const checklistStyle = {

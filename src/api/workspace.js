@@ -59,7 +59,7 @@ export const searchWorkspacesNaturalLanguage = async (
 
 export const searchReviewTargets = async (keyword) => {
     const response = await api.get(
-        '/workspaces/search',
+        '/workspaces/place-search',
         {
             params: {
                 keyword

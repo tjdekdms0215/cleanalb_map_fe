@@ -138,19 +138,42 @@ const normalizeWorkspaceList = (payload) => {
         return payload.map(normalizeWorkspace);
     }
 
-    const extracted = pickFirstDefined(
-        payload?.data,
-        payload?.results,
-        payload?.items,
-        payload?.content,
-        payload?.workspaces
-    );
+    if (!payload || typeof payload !== 'object') {
+        return [];
+    }
 
-    if (Array.isArray(extracted)) {
-        return extracted.map(normalizeWorkspace);
+    const nestedKeys = [
+        'content',
+        'results',
+        'items',
+        'workspaces',
+        'list',
+        'data',
+        'result'
+    ];
+
+    for (const key of nestedKeys) {
+        const normalized = normalizeWorkspaceList(
+            payload[key]
+        );
+
+        if (normalized.length > 0) {
+            return normalized;
+        }
     }
 
     return [];
+};
+
+const normalizeWorkspacePayload = (payload) => {
+    const source =
+        payload?.data &&
+        typeof payload.data === 'object' &&
+        !Array.isArray(payload.data)
+            ? payload.data
+            : payload;
+
+    return normalizeWorkspace(source);
 };
 
 /**
@@ -196,9 +219,7 @@ export const searchWorkspacesNaturalLanguage = async (
     );
 
     const raw = response.data?.data || response.data;
-    const results = normalizeWorkspaceList(
-        raw?.results ?? raw
-    );
+    const results = normalizeWorkspaceList(raw);
 
     return {
         interpreted:
@@ -264,13 +285,9 @@ export const searchReviewTargets = async (keyword) => {
             }
         );
 
-        if (!Array.isArray(response.data)) {
-            throw new Error(
-                '사업장 검색 API 응답이 배열이 아닙니다.'
-            );
-        }
+        const results = normalizeWorkspaceList(response.data);
 
-        return response.data.map(normalizeReviewTarget);
+        return results.map(normalizeReviewTarget);
     } catch (error) {
         if (![502, 503].includes(error?.response?.status)) {
             throw error;
@@ -302,7 +319,7 @@ export const getWorkspaceDetail = async (workspaceId) => {
         }
     );
 
-    return normalizeWorkspace(response.data);
+    return normalizeWorkspacePayload(response.data);
 };
 
 export const getWorkspaceSummary = async (workspaceId) => {
@@ -313,7 +330,7 @@ export const getWorkspaceSummary = async (workspaceId) => {
         }
     );
 
-    return normalizeWorkspace(response.data);
+    return normalizeWorkspacePayload(response.data);
 };
 
 export const createWorkspace = async (payload) => {

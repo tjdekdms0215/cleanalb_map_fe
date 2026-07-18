@@ -247,15 +247,9 @@ const Home = () => {
 
         stores.forEach((store) => {
             const score = store.cleanScore;
-            const lat = store.latitude;
-            const lng = store.longitude;
+            const coordinates = getStoreCoordinates(store);
 
-            if (
-                lat === null ||
-                lat === undefined ||
-                lng === null ||
-                lng === undefined
-            ) {
+            if (!coordinates) {
                 return;
             }
 
@@ -283,7 +277,10 @@ const Home = () => {
                 new window.kakao.maps.Size(28, 40)
             );
 
-            const markerPosition = new window.kakao.maps.LatLng(lat, lng);
+            const markerPosition = new window.kakao.maps.LatLng(
+                coordinates.lat,
+                coordinates.lng
+            );
 
             const marker = new window.kakao.maps.Marker({
                 position: markerPosition,

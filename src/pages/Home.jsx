@@ -123,13 +123,38 @@ const getStoreCoordinates = (store) => {
     return { lat, lng };
 };
 
-const readWorkspaceName = (workspace = {}) =>
-    workspace?.name ||
-    workspace?.workspaceName ||
-    workspace?.workspace_name ||
-    workspace?.placeName ||
-    workspace?.place_name ||
-    '';
+const readWorkspaceName = (workspace = {}) => {
+    const nestedWorkspace =
+        workspace?.workspace ||
+        workspace?.place ||
+        workspace?.store ||
+        workspace?.business ||
+        {};
+
+    return (
+        workspace?.name ||
+        workspace?.workspaceName ||
+        workspace?.workspace_name ||
+        workspace?.placeName ||
+        workspace?.place_name ||
+        workspace?.businessName ||
+        workspace?.business_name ||
+        workspace?.storeName ||
+        workspace?.store_name ||
+        workspace?.title ||
+        workspace?.displayName ||
+        workspace?.display_name ||
+        nestedWorkspace?.name ||
+        nestedWorkspace?.workspaceName ||
+        nestedWorkspace?.workspace_name ||
+        nestedWorkspace?.placeName ||
+        nestedWorkspace?.place_name ||
+        nestedWorkspace?.businessName ||
+        nestedWorkspace?.storeName ||
+        nestedWorkspace?.title ||
+        ''
+    );
+};
 
 const getWorkspaceDisplayName = (workspace = {}) =>
     readWorkspaceName(workspace) || '사업장 이름 없음';

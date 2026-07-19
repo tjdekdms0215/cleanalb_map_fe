@@ -2546,7 +2546,7 @@ const submissionOverlayStyle = {
 
 const submissionCardStyle = {
     width: '100%',
-    maxWidth: '390px',
+    maxWidth: '330px',
     textAlign: 'center',
     animation:
         'submissionCardLift 560ms cubic-bezier(0.2, 0.9, 0.2, 1) both'
@@ -2554,9 +2554,9 @@ const submissionCardStyle = {
 
 const submissionIconWrapStyle = {
     position: 'relative',
-    width: '96px',
-    height: '96px',
-    margin: '0 auto 52px',
+    width: '78px',
+    height: '78px',
+    margin: '0 auto 38px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -2575,18 +2575,18 @@ const submissionIconStyle = {
     backgroundColor: '#4a72ff',
     borderRadius: '999px',
     color: '#ffffff',
-    fontSize: '48px',
+    fontSize: '38px',
     fontWeight: '500',
     lineHeight: 1,
-    boxShadow: '0 14px 22px rgba(35, 48, 80, 0.18)',
+    boxShadow: '0 10px 18px rgba(35, 48, 80, 0.16)',
     animation:
         'submissionCheckPop 620ms cubic-bezier(0.18, 1.12, 0.34, 1) 150ms both'
 };
 
 const submissionTitleStyle = {
-    margin: '0 0 28px',
+    margin: '0 0 18px',
     color: '#121826',
-    fontSize: '30px',
+    fontSize: '24px',
     fontWeight: '900',
     lineHeight: '1.2',
     animation:
@@ -2594,9 +2594,9 @@ const submissionTitleStyle = {
 };
 
 const submissionTextStyle = {
-    margin: '0 0 66px',
+    margin: '0 0 46px',
     color: '#8c94a1',
-    fontSize: '21px',
+    fontSize: '16px',
     fontWeight: '500',
     lineHeight: '1.35',
     animation:
@@ -2604,16 +2604,16 @@ const submissionTextStyle = {
 };
 
 const submissionButtonStyle = {
-    width: '304px',
+    width: '248px',
     maxWidth: '100%',
-    height: '80px',
-    padding: '0 26px',
+    height: '58px',
+    padding: '0 22px',
     backgroundColor: '#ffffff',
     border: '1px solid #d7dce3',
     borderRadius: '8px',
     color: '#343c49',
     cursor: 'pointer',
-    fontSize: '23px',
+    fontSize: '18px',
     fontWeight: '900',
     fontFamily: 'inherit',
     boxShadow: '0 2px 5px rgba(31, 40, 55, 0.12)',

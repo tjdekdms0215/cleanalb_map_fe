@@ -1267,10 +1267,13 @@ const WorkspaceDetail = () => {
                                             workerRowsStyle
                                         }
                                     >
-                                        {detailData.shiftRows.map(
-                                            (row) => (
+                                        {[
+                                            'weekday',
+                                            'weekend'
+                                        ].map(
+                                            (dayType) => (
                                                 <div
-                                                    key={row.id}
+                                                    key={dayType}
                                                     style={{
                                                         ...shiftRowStyle,
                                                         ...(isMobile
@@ -1287,7 +1290,9 @@ const WorkspaceDetail = () => {
                                                         }}
                                                     >
                                                         {
-                                                            row.label
+                                                            DAY_TYPE_LABELS[
+                                                                dayType
+                                                            ]
                                                         }
                                                     </div>
 
@@ -1296,13 +1301,8 @@ const WorkspaceDetail = () => {
                                                             shiftBarsStyle
                                                         }
                                                     >
-                                                        {[
-                                                            'weekday',
-                                                            'weekend'
-                                                        ].map(
-                                                            (
-                                                                dayType
-                                                            ) => {
+                                                        {detailData.shiftRows.map(
+                                                            (row) => {
                                                                 const value =
                                                                     row[
                                                                         dayType
@@ -1310,7 +1310,7 @@ const WorkspaceDetail = () => {
 
                                                                 return (
                                                                     <div
-                                                                        key={`${row.id}-${dayType}`}
+                                                                        key={`${dayType}-${row.id}`}
                                                                         style={{
                                                                             ...shiftBarLineStyle,
                                                                             ...(isMobile
@@ -1324,9 +1324,7 @@ const WorkspaceDetail = () => {
                                                                             }
                                                                         >
                                                                             {
-                                                                                DAY_TYPE_LABELS[
-                                                                                    dayType
-                                                                                ]
+                                                                                row.label
                                                                             }
                                                                         </span>
 

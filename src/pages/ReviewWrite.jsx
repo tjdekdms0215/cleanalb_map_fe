@@ -1639,6 +1639,10 @@ const ReviewWrite = () => {
                                     </span>
                                 </div>
 
+                                <p style={reviewModerationNoticeStyle}>
+                                    근무 경험을 자유롭게 작성해주세요. 개인정보·협박 등 심각한 표현은 관리자 검수 과정에서 차단될 수 있습니다.
+                                </p>
+
                                 <div
                                     style={
                                         textareaWrapperStyle
@@ -1672,16 +1676,12 @@ const ReviewWrite = () => {
                                     </span>
                                 </div>
 
-                                <p style={reviewModerationNoticeStyle}>
-                                    개인정보·협박 등 심각한 표현은 관리자 검수 과정에서 차단될 수 있습니다.
-                                </p>
-
                                 <button
                                     type="button"
                                     onClick={openPurifyModal}
                                     style={purifyButtonStyle}
                                 >
-                                    ✨ AI 후기 순화
+                                    ✨ AI로 제출 전 표현 다듬기
                                 </button>
 
                                 <p

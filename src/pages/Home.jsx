@@ -1399,6 +1399,8 @@ const sidebarStyle = {
     borderLeft: '1px solid #ddd',
     display: 'flex',
     flexDirection: 'column',
+    minHeight: 0,
+    overflow: 'hidden',
     zIndex: 5
 };
 
@@ -1406,7 +1408,8 @@ const mobileSidebarStyle = {
     width: '100%',
     borderLeft: 'none',
     borderTop: '1px solid #ddd',
-    minHeight: 0
+    minHeight: 0,
+    overflow: 'visible'
 };
 
 const sidebarHeaderAreaStyle = {
@@ -1540,7 +1543,9 @@ const mobileSearchChipStyle = {
 
 const listContainerStyle = {
     overflowY: 'auto',
-    flex: 1
+    overflowX: 'hidden',
+    flex: 1,
+    minHeight: 0
 };
 
 const mobileListContainerStyle = {
@@ -1551,12 +1556,14 @@ const mobileListContainerStyle = {
 const listItemStyle = {
     display: 'block',
     width: '100%',
-    padding: '20px',
+    minHeight: '62px',
+    padding: '11px 16px',
     border: 'none',
     borderBottom: '1px solid #eee',
     backgroundColor: '#ffffff',
     textAlign: 'left',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    boxSizing: 'border-box'
 };
 
 const mobileListItemStyle = {
@@ -1572,7 +1579,7 @@ const listItemTopStyle = {
 
 const storeNameStyle = {
     minWidth: 0,
-    fontSize: '18px',
+    fontSize: '15px',
     fontWeight: 'bold',
     color: '#222',
     overflow: 'hidden',
@@ -1587,7 +1594,7 @@ const mobileStoreNameStyle = {
 const storeScoreStyle = {
     flexShrink: 0,
     fontWeight: 'bold',
-    fontSize: '16px'
+    fontSize: '14px'
 };
 
 const mobileStoreScoreStyle = {
@@ -1595,9 +1602,9 @@ const mobileStoreScoreStyle = {
 };
 
 const storeInfoStyle = {
-    fontSize: '14px',
+    fontSize: '12px',
     color: '#666',
-    marginTop: '8px',
+    marginTop: '5px',
     fontWeight: '500'
 };
 

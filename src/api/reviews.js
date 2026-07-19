@@ -682,6 +682,17 @@ const normalizeAdminReview = (item) => {
             item?.createdDate ||
             review?.createdAt ||
             '',
+        createdAt:
+            item?.createdAt ||
+            item?.createdDate ||
+            review?.createdAt ||
+            '',
+        updatedAt:
+            item?.updatedAt ||
+            item?.updated_at ||
+            review?.updatedAt ||
+            review?.updated_at ||
+            '',
         status: normalizeAdminStatus(
             item?.status ||
                 item?.reviewStatus ||

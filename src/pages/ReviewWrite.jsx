@@ -1638,9 +1638,6 @@ const ReviewWrite = () => {
                                         *필수
                                     </span>
                                 </div>
-                                <p style={sectionHelpStyle}>
-                                    자유롭게 작성해 주세요.
-                                </p>
 
                                 <div
                                     style={
@@ -1675,6 +1672,10 @@ const ReviewWrite = () => {
                                     </span>
                                 </div>
 
+                                <p style={reviewModerationNoticeStyle}>
+                                    심각한 표현은 관리자 검수에서 조정될 수 있습니다.
+                                </p>
+
                                 <button
                                     type="button"
                                     onClick={openPurifyModal}
@@ -1693,7 +1694,7 @@ const ReviewWrite = () => {
                                 >
                                     {isPurifiedApplied
                                         ? 'AI 순화 문안이 적용되었습니다.'
-                                        : 'AI 순화 없이 제출할 수 있으며, 개인정보·협박 등 심각한 표현은 관리자 검수 과정에서 차단될 수 있습니다.'}
+                                        : 'AI 순화는 선택 사항입니다. 표현이 걱정된다면 문장을 다듬어 보세요.'}
                                 </p>
 
                                 {aiNoticeMessage && (
@@ -2250,10 +2251,20 @@ const purifyButtonStyle = {
 
 const purifyRequiredTextStyle = {
     margin: '9px 0 0',
-    fontSize: '12px',
-    fontWeight: '800',
-    lineHeight: '1.45',
-    textAlign: 'center'
+    fontSize: '10.5px',
+    fontWeight: '700',
+    lineHeight: '1.35',
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+    letterSpacing: '-0.2px'
+};
+
+const reviewModerationNoticeStyle = {
+    margin: '8px 0 0',
+    color: '#9AA3B0',
+    fontSize: '11px',
+    fontWeight: '600',
+    lineHeight: '1.45'
 };
 
 const warningBoxStyle = {

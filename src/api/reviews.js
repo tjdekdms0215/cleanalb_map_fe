@@ -894,6 +894,75 @@ const uploadReviewAttachment = async (reviewId, file) => {
     throw lastError;
 };
 
+const buildAttachmentUploadError = ({
+    error,
+    fileName,
+    reviewId
+}) => {
+    const statusCode = error?.response?.status;
+    const apiMessage = extractApiErrorMessage(error);
+    const finalMessage =
+        isTimeoutError(error)
+            ? `${fileName} 업로드 응답이 지연되고 있습니다. 잠시 후 다시 시도해 주세요.`
+            : isNetworkError(error)
+                ? `${fileName} 업로드 서버에 연결하지 못했습니다. 네트워크 상태나 백엔드 서버 상태를 확인해 주세요.`
+                : isTransientServerError(error)
+                    ? `${fileName} 인증자료 업로드 서버가 일시적으로 응답하지 않습니다. 후기는 생성되었지만 인증자료 업로드가 완료되지 않았습니다. (reviewId: ${reviewId})`
+                : statusCode === 400 &&
+                    isGenericBadRequestMessage(apiMessage)
+                    ? `${fileName} 업로드 요청이 거절되었습니다. 파일 형식(JPG, JPEG, PNG, PDF)과 용량(10MB 이하)을 확인해 주세요.`
+                    : apiMessage;
+
+    const uploadError = new Error(
+        finalMessage ||
+            (statusCode
+                ? `${fileName} 업로드에 실패했습니다. (HTTP ${statusCode})`
+                : `${fileName} 업로드에 실패했습니다.`)
+    );
+
+    uploadError.reviewId = reviewId;
+    uploadError.fileName = fileName;
+    uploadError.attachmentUploadFailed = true;
+    uploadError.cause = error;
+
+    return uploadError;
+};
+
+export const uploadReviewAttachments = async ({
+    reviewId,
+    evidenceFiles = []
+}) => {
+    if (!reviewId) {
+        throw new Error(
+            '인증 자료를 업로드할 reviewId가 없습니다.'
+        );
+    }
+
+    const uploadedAttachments = [];
+
+    for (const file of evidenceFiles) {
+        try {
+            uploadedAttachments.push(
+                await uploadReviewAttachment(
+                    reviewId,
+                    file
+                )
+            );
+        } catch (error) {
+            const fileName =
+                file?.name || '첨부 파일';
+
+            throw buildAttachmentUploadError({
+                error,
+                fileName,
+                reviewId
+            });
+        }
+    }
+
+    return uploadedAttachments;
+};
+
 export const submitReview = async ({
     workspaceId,
     reviewData,
@@ -919,40 +988,17 @@ export const submitReview = async ({
         );
     }
 
-    const uploadedAttachments = [];
+    let uploadedAttachments = [];
 
-    for (const file of evidenceFiles) {
-        try {
-            uploadedAttachments.push(
-                await uploadReviewAttachment(
-                    createdReviewId,
-                    file
-                )
-            );
-        } catch (error) {
-            const fileName =
-                file?.name || '첨부 파일';
-            const statusCode = error?.response?.status;
-            const apiMessage = extractApiErrorMessage(error);
-            const finalMessage =
-                isTimeoutError(error)
-                    ? `${fileName} 업로드 응답이 지연되고 있습니다. 잠시 후 다시 시도해 주세요.`
-                    : isNetworkError(error)
-                        ? `${fileName} 업로드 서버에 연결하지 못했습니다. 네트워크 상태나 백엔드 서버 상태를 확인해 주세요.`
-                        : isTransientServerError(error)
-                            ? `${fileName} 인증자료 업로드 서버가 일시적으로 응답하지 않습니다. 후기는 생성되었지만 인증자료 업로드가 완료되지 않았습니다. (reviewId: ${createdReviewId})`
-                        : statusCode === 400 &&
-                            isGenericBadRequestMessage(apiMessage)
-                            ? `${fileName} 업로드 요청이 거절되었습니다. 파일 형식(JPG, JPEG, PNG, PDF)과 용량(10MB 이하)을 확인해 주세요.`
-                            : apiMessage;
-
-            throw new Error(
-                finalMessage ||
-                    (statusCode
-                    ? `${fileName} 업로드에 실패했습니다. (HTTP ${statusCode})`
-                    : `${fileName} 업로드에 실패했습니다.`)
-            );
-        }
+    try {
+        uploadedAttachments =
+            await uploadReviewAttachments({
+                reviewId: createdReviewId,
+                evidenceFiles
+            });
+    } catch (error) {
+        error.createdReview = createdReview;
+        throw error;
     }
 
     return {

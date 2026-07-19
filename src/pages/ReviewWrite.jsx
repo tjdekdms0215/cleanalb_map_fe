@@ -9,7 +9,11 @@ import {
     useNavigate,
     useParams
 } from 'react-router-dom';
-import { submitReview, purifyReview } from '../api/reviews';
+import {
+    purifyReview,
+    submitReview,
+    uploadReviewAttachments
+} from '../api/reviews';
 import {
     getWorkspaceDetail,
     resolveWorkspace
@@ -612,6 +616,10 @@ const ReviewWrite = () => {
     const [uploadMessage, setUploadMessage] = useState('');
     const [formErrorMessage, setFormErrorMessage] =
         useState('');
+    const [
+        pendingAttachmentReviewId,
+        setPendingAttachmentReviewId
+    ] = useState(null);
     const [aiNoticeMessage, setAiNoticeMessage] =
         useState('');
 
@@ -1108,6 +1116,7 @@ const ReviewWrite = () => {
 
         setIsSubmitting(true);
         setFormErrorMessage('');
+        setPendingAttachmentReviewId(null);
 
         try {
             await submitReview({
@@ -1130,9 +1139,56 @@ const ReviewWrite = () => {
             setIsSubmissionComplete(true);
         } catch (error) {
             console.error('후기 제출에 실패했습니다.', error);
+            if (
+                error?.attachmentUploadFailed &&
+                error?.reviewId
+            ) {
+                setPendingAttachmentReviewId(error.reviewId);
+            }
             setFormErrorMessage(
                 error?.message ||
                     '후기 제출 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.'
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleRetryAttachmentUpload = async () => {
+        if (!pendingAttachmentReviewId) {
+            return;
+        }
+
+        setIsSubmitting(true);
+        setFormErrorMessage('');
+
+        try {
+            await uploadReviewAttachments({
+                reviewId: pendingAttachmentReviewId,
+                evidenceFiles: evidenceItems.map(
+                    (item) => item.file
+                )
+            });
+
+            sessionStorage.removeItem(
+                'selected_kakao_place'
+            );
+            setPendingAttachmentReviewId(null);
+            setIsSubmissionComplete(true);
+        } catch (error) {
+            console.error(
+                '인증자료 재업로드에 실패했습니다.',
+                error
+            );
+            if (
+                error?.attachmentUploadFailed &&
+                error?.reviewId
+            ) {
+                setPendingAttachmentReviewId(error.reviewId);
+            }
+            setFormErrorMessage(
+                error?.message ||
+                    '인증자료 재업로드 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.'
             );
         } finally {
             setIsSubmitting(false);
@@ -1655,13 +1711,44 @@ const ReviewWrite = () => {
                             </div>
 
                             {formErrorMessage && (
-                                <p
+                                <div
                                     ref={formErrorRef}
                                     role="alert"
                                     style={errorTextStyle}
                                 >
-                                    {formErrorMessage}
-                                </p>
+                                    <p
+                                        style={
+                                            errorMessageTextStyle
+                                        }
+                                    >
+                                        {formErrorMessage}
+                                    </p>
+
+                                    {pendingAttachmentReviewId ? (
+                                        <button
+                                            type="button"
+                                            onClick={
+                                                handleRetryAttachmentUpload
+                                            }
+                                            disabled={isSubmitting}
+                                            style={{
+                                                ...retryUploadButtonStyle,
+                                                opacity:
+                                                    isSubmitting
+                                                        ? 0.65
+                                                        : 1,
+                                                cursor:
+                                                    isSubmitting
+                                                        ? 'not-allowed'
+                                                        : 'pointer'
+                                            }}
+                                        >
+                                            {isSubmitting
+                                                ? '인증자료 업로드 중'
+                                                : '인증자료 다시 업로드'}
+                                        </button>
+                                    ) : null}
+                                </div>
                             )}
 
                             <button
@@ -1670,20 +1757,25 @@ const ReviewWrite = () => {
                                 disabled={
                                     !isFormValid ||
                                     isSubmitting ||
-                                    isWorkspaceResolving
+                                    isWorkspaceResolving ||
+                                    Boolean(
+                                        pendingAttachmentReviewId
+                                    )
                                 }
                                 style={{
                                     ...submitButtonStyle,
                                     backgroundColor:
                                         isFormValid &&
                                         !isSubmitting &&
-                                        !isWorkspaceResolving
+                                        !isWorkspaceResolving &&
+                                        !pendingAttachmentReviewId
                                             ? '#4a72ff'
                                             : '#cfd5df',
                                     cursor:
                                         isFormValid &&
                                         !isSubmitting &&
-                                        !isWorkspaceResolving
+                                        !isWorkspaceResolving &&
+                                        !pendingAttachmentReviewId
                                             ? 'pointer'
                                             : 'not-allowed'
                                 }}
@@ -2198,6 +2290,22 @@ const errorTextStyle = {
     lineHeight: '1.6',
     textAlign: 'left',
     boxSizing: 'border-box'
+};
+
+const errorMessageTextStyle = {
+    margin: 0
+};
+
+const retryUploadButtonStyle = {
+    marginTop: '10px',
+    width: '100%',
+    height: '42px',
+    border: '1px solid #dc4a4a',
+    backgroundColor: '#ffffff',
+    color: '#dc4a4a',
+    fontSize: '13px',
+    fontWeight: '800',
+    fontFamily: 'inherit'
 };
 
 const submitButtonStyle = {

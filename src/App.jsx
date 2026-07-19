@@ -9,7 +9,6 @@ import ReviewWrite from './pages/ReviewWrite';
 import RequireAuth from './components/RequireAuth';
 import RequireAdmin from './components/RequireAdmin';
 import WorkspaceDetail from './pages/WorkspaceDetail';
-import ContractAnalyzer from './pages/ContractAnalyzer';
 import AdminPage from './pages/AdminPage';
 
 const App = () => {
@@ -31,11 +30,6 @@ const App = () => {
                 <Route
                     path="/guide"
                     element={<Guide />}
-                />
-
-                <Route
-                    path="/contract/analyzer"
-                    element={<ContractAnalyzer />}
                 />
 
                 <Route

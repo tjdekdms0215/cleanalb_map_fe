@@ -514,6 +514,13 @@ const AdminPage = () => {
             return;
         }
 
+        if (selectedReview.status !== 'PENDING') {
+            setErrorMessage(
+                '승인 또는 거절된 후기는 수정할 수 없습니다.'
+            );
+            return;
+        }
+
         setEditableReviewText(selectedReview.reviewText || '');
         setIsReviewTextEditing(true);
         setErrorMessage('');
@@ -530,6 +537,14 @@ const AdminPage = () => {
             return;
         }
 
+        if (selectedReview.status !== 'PENDING') {
+            setIsReviewTextEditing(false);
+            setErrorMessage(
+                '주관식 후기는 승인하기 전까지만 수정할 수 있습니다.'
+            );
+            return;
+        }
+
         const nextReviewText = editableReviewText.trim();
 
         setIsReviewTextSaving(true);
@@ -543,12 +558,15 @@ const AdminPage = () => {
                 });
             const updatedText =
                 updatedReview.reviewText ?? nextReviewText;
+            const updatedAt = updatedReview.updatedAt || '';
 
             setSelectedReview((current) =>
                 current
                     ? {
                           ...current,
-                          reviewText: updatedText
+                          reviewText: updatedText,
+                          updatedAt:
+                              updatedAt || current.updatedAt
                       }
                     : current
             );
@@ -558,7 +576,9 @@ const AdminPage = () => {
                     String(selectedReview.reviewId)
                         ? {
                               ...review,
-                              reviewText: updatedText
+                              reviewText: updatedText,
+                              updatedAt:
+                                  updatedAt || review.updatedAt
                           }
                         : review
                 )
@@ -649,6 +669,8 @@ const AdminPage = () => {
     const statusMeta = getStatusMeta(
         selectedReview?.status
     );
+    const canEditReviewText =
+        selectedReview?.status === 'PENDING';
     const violationSet = new Set(
         selectedReview?.violationItems || []
     );
@@ -1288,7 +1310,8 @@ const AdminPage = () => {
                                         주관식 후기
                                     </h2>
 
-                                    {!isReviewTextEditing && (
+                                    {!isReviewTextEditing &&
+                                        canEditReviewText && (
                                         <button
                                             type="button"
                                             onClick={
@@ -1307,7 +1330,8 @@ const AdminPage = () => {
                                     )}
                                 </div>
 
-                                {isReviewTextEditing ? (
+                                {isReviewTextEditing &&
+                                canEditReviewText ? (
                                     <>
                                         <textarea
                                             value={

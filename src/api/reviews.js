@@ -1172,10 +1172,9 @@ export const updateAdminReviewContent = async ({
     }
 
     const response = await api.patch(
-        `/admin/reviews/${reviewId}`,
+        `/admin/reviews/${reviewId}/content`,
         {
-            content,
-            reviewText: content
+            content
         },
         {
             preserveAuthOnFailure: true
@@ -1197,7 +1196,12 @@ export const updateAdminReviewContent = async ({
                 'reviewText',
                 'subjectiveReview',
                 'purifiedContent'
-            ]) || content
+            ]) || content,
+        updatedAt:
+            raw?.updatedAt ||
+            raw?.updated_at ||
+            normalized.updatedAt ||
+            ''
     };
 };
 

@@ -33,6 +33,16 @@ const DAY_TYPE_LABELS = {
     weekend: '주말'
 };
 const REVIEWS_PER_PAGE = 5;
+const DETAIL_POSITIVE_INDICATOR_LABELS = {
+    NO_CONTRACT: '근로계약서 작성',
+    MINIMUM_WAGE: '최저시급 준수',
+    WEEKLY_ALLOWANCE: '주휴수당 지급',
+    BREAK_TIME: '휴게시간 보장',
+    PAY_DELAY: '급여 제때 지급',
+    SCHEDULE_CHANGE: '스케줄 사전 협의',
+    SUBSTITUTE_DEMAND: '부당한 대타 강요 없음',
+    OVERTIME_PAY: '초과근무 수당 지급'
+};
 
 const coerceNumber = (value) => {
     if (typeof value === 'number' && Number.isFinite(value)) {
@@ -355,7 +365,10 @@ const normalizeIndicatorStat = (indicator, entry) => {
 
     return {
         id: indicator.id,
-        label: indicator.label,
+        label:
+            DETAIL_POSITIVE_INDICATOR_LABELS[indicator.id] ||
+            indicator.positiveLabel ||
+            indicator.label,
         complianceCount:
             Number.isFinite(complianceCount)
                 ? complianceCount

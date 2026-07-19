@@ -14,6 +14,8 @@ const DEFAULT_ADMIN_PAGE_SIZE = 50;
 const REVIEW_CREATE_TIMEOUT_MS = 30000;
 const REVIEW_ATTACHMENT_TIMEOUT_MS = 30000;
 const REVIEW_PURITY_TIMEOUT_MS = 45000;
+const REVIEW_ATTACHMENT_MAX_ATTEMPTS = 3;
+const REVIEW_ATTACHMENT_RETRY_DELAYS = [700, 1500];
 
 const normalizeToneKey = (value = '') =>
     normalizeIndicatorKey(value);
@@ -76,6 +78,16 @@ const isNetworkError = (error) =>
         String(error?.message || '')
             .trim()
             .toLowerCase() === 'network error');
+
+const isTransientServerError = (error) =>
+    [502, 503, 504].includes(error?.response?.status) ||
+    isTimeoutError(error) ||
+    isNetworkError(error);
+
+const wait = (ms) =>
+    new Promise((resolve) => {
+        globalThis.setTimeout(resolve, ms);
+    });
 
 const extractApiErrorMessage = (error) => {
     const responseData = error?.response?.data;
@@ -830,31 +842,56 @@ const resolveCreatedReviewId = (createdReview) =>
 const uploadReviewAttachment = async (reviewId, file) => {
     const formData = new FormData();
     formData.append('file', file, file.name);
+    let lastError = null;
 
-    try {
-        const response = await api.post(
-            `/reviews/${reviewId}/attachments`,
-            formData,
-            {
-                timeout: REVIEW_ATTACHMENT_TIMEOUT_MS
+    for (
+        let attempt = 1;
+        attempt <= REVIEW_ATTACHMENT_MAX_ATTEMPTS;
+        attempt += 1
+    ) {
+        try {
+            const response = await api.post(
+                `/reviews/${reviewId}/attachments`,
+                formData,
+                {
+                    timeout: REVIEW_ATTACHMENT_TIMEOUT_MS
+                }
+            );
+
+            return response.data?.data || response.data;
+        } catch (error) {
+            lastError = error;
+
+            console.error('리뷰 첨부 업로드 실패', {
+                attempt,
+                url: `/reviews/${reviewId}/attachments`,
+                reviewId,
+                fileName: file?.name,
+                fileType: file?.type,
+                fileSize: file?.size,
+                responseData: error?.response?.data,
+                status: error?.response?.status,
+                errorCode: error?.code,
+                errorMessage: error?.message
+            });
+
+            if (
+                attempt >= REVIEW_ATTACHMENT_MAX_ATTEMPTS ||
+                !isTransientServerError(error)
+            ) {
+                break;
             }
-        );
 
-        return response.data?.data || response.data;
-    } catch (error) {
-        console.error('리뷰 첨부 업로드 실패', {
-            url: `/reviews/${reviewId}/attachments`,
-            reviewId,
-            fileName: file?.name,
-            fileType: file?.type,
-            fileSize: file?.size,
-            responseData: error?.response?.data,
-            status: error?.response?.status,
-            errorCode: error?.code,
-            errorMessage: error?.message
-        });
-        throw error;
+            await wait(
+                REVIEW_ATTACHMENT_RETRY_DELAYS[attempt - 1] ||
+                    REVIEW_ATTACHMENT_RETRY_DELAYS[
+                        REVIEW_ATTACHMENT_RETRY_DELAYS.length - 1
+                    ]
+            );
+        }
     }
+
+    throw lastError;
 };
 
 export const submitReview = async ({
@@ -902,6 +939,8 @@ export const submitReview = async ({
                     ? `${fileName} 업로드 응답이 지연되고 있습니다. 잠시 후 다시 시도해 주세요.`
                     : isNetworkError(error)
                         ? `${fileName} 업로드 서버에 연결하지 못했습니다. 네트워크 상태나 백엔드 서버 상태를 확인해 주세요.`
+                        : isTransientServerError(error)
+                            ? `${fileName} 인증자료 업로드 서버가 일시적으로 응답하지 않습니다. 후기는 생성되었지만 인증자료 업로드가 완료되지 않았습니다. (reviewId: ${createdReviewId})`
                         : statusCode === 400 &&
                             isGenericBadRequestMessage(apiMessage)
                             ? `${fileName} 업로드 요청이 거절되었습니다. 파일 형식(JPG, JPEG, PNG, PDF)과 용량(10MB 이하)을 확인해 주세요.`

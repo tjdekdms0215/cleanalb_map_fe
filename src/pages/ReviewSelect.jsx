@@ -603,8 +603,8 @@ const searchFormStyle = {
 };
 
 const mobileSearchFormStyle = {
-    flexDirection: 'column',
-    gap: '10px'
+    flexDirection: 'row',
+    gap: '8px'
 };
 
 const searchInputStyle = {
@@ -636,7 +636,8 @@ const searchButtonStyle = {
 };
 
 const mobileSearchButtonStyle = {
-    width: '100%'
+    width: '86px',
+    flexShrink: 0
 };
 
 const searchIconStyle = {

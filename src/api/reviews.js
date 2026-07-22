@@ -878,8 +878,6 @@ const resolveCreatedReviewId = (createdReview) =>
     null;
 
 const uploadReviewAttachment = async (reviewId, file) => {
-    const formData = new FormData();
-    formData.append('file', file, file.name);
     let lastError = null;
 
     for (
@@ -888,6 +886,9 @@ const uploadReviewAttachment = async (reviewId, file) => {
         attempt += 1
     ) {
         try {
+            const formData = new FormData();
+            formData.append('file', file, file.name);
+
             const response = await api.post(
                 `/reviews/${reviewId}/attachments`,
                 formData,

@@ -111,10 +111,6 @@ const DEFAULT_MAP_CENTER = {
     lat: 35.1764,
     lng: 126.9135
 };
-const DESKTOP_POPUP_HEIGHT = 400;
-const DESKTOP_POPUP_ANCHOR_GAP = 48;
-const DESKTOP_POPUP_CENTER_OFFSET =
-    DESKTOP_POPUP_ANCHOR_GAP + DESKTOP_POPUP_HEIGHT / 2;
 const EMPTY_WORKSPACE_NAMES = new Set([
     '사업장 이름 없음',
     '이름 없음',
@@ -189,10 +185,6 @@ const centerMapOnStore = (map, store) => {
             coordinates.lng
         )
     );
-
-    window.requestAnimationFrame(() => {
-        map.panBy(0, DESKTOP_POPUP_CENTER_OFFSET);
-    });
 
     return true;
 };
@@ -450,10 +442,6 @@ const Home = () => {
 
             window.kakao.maps.event.addListener(marker, 'click', () => {
                 selectedStoreRef.current = store;
-                if (!isMobile) {
-                    centerMapOnStore(map, store);
-                }
-
                 setSelectedStore(store);
                 window.requestAnimationFrame(() => {
                     setPopupPoint(

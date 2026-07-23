@@ -111,6 +111,11 @@ const DEFAULT_MAP_CENTER = {
     lat: 35.1764,
     lng: 126.9135
 };
+const DESKTOP_POPUP_WIDTH = 300;
+const DESKTOP_POPUP_HEIGHT = 400;
+const DESKTOP_POPUP_BELOW_GAP = 48;
+const DESKTOP_POPUP_ABOVE_GAP = 18;
+const DESKTOP_POPUP_EDGE_GAP = 16;
 const EMPTY_WORKSPACE_NAMES = new Set([
     '사업장 이름 없음',
     '이름 없음',
@@ -187,6 +192,59 @@ const centerMapOnStore = (map, store) => {
     );
 
     return true;
+};
+
+const clampValue = (value, min, max) =>
+    Math.min(Math.max(value, min), max);
+
+const getDesktopPopupPositionStyle = (
+    point,
+    viewportSize
+) => {
+    if (
+        !point ||
+        !Number.isFinite(viewportSize?.width) ||
+        !Number.isFinite(viewportSize?.height) ||
+        viewportSize.width <= 0 ||
+        viewportSize.height <= 0
+    ) {
+        return null;
+    }
+
+    const minLeft =
+        DESKTOP_POPUP_EDGE_GAP + DESKTOP_POPUP_WIDTH / 2;
+    const maxLeft = Math.max(
+        minLeft,
+        viewportSize.width -
+            DESKTOP_POPUP_EDGE_GAP -
+            DESKTOP_POPUP_WIDTH / 2
+    );
+    const left = clampValue(point.x, minLeft, maxLeft);
+    const belowBottom =
+        point.y + DESKTOP_POPUP_BELOW_GAP + DESKTOP_POPUP_HEIGHT;
+    const shouldPlaceAbove =
+        belowBottom >
+        viewportSize.height - DESKTOP_POPUP_EDGE_GAP;
+
+    if (shouldPlaceAbove) {
+        return {
+            left,
+            top: Math.max(
+                point.y - DESKTOP_POPUP_ABOVE_GAP,
+                DESKTOP_POPUP_EDGE_GAP + DESKTOP_POPUP_HEIGHT
+            ),
+            transform: 'translate(-50%, -100%)'
+        };
+    }
+
+    return {
+        left,
+        top: Math.max(
+            point.y + DESKTOP_POPUP_BELOW_GAP,
+            DESKTOP_POPUP_EDGE_GAP
+        ),
+        transform: 'translateX(-50%)'
+    };
 };
 
 const normalizeWorkspaceNameText = (value) => {
@@ -287,12 +345,15 @@ const Home = () => {
     const navigate = useNavigate();
     const isMobile = useMediaQuery('(max-width: 900px)');
     const mapRef = useRef(null);
+    const mapContainerRef = useRef(null);
     const selectedStoreRef = useRef(null);
 
     const [stores, setStores] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedStore, setSelectedStore] = useState(null);
     const [popupPoint, setPopupPoint] = useState(null);
+    const [mapViewportSize, setMapViewportSize] =
+        useState({ width: 0, height: 0 });
     const [selectedStoreSummary, setSelectedStoreSummary] =
         useState(null);
     const [searchInterpretation, setSearchInterpretation] =
@@ -359,6 +420,23 @@ const Home = () => {
         if (!container) {
             return;
         }
+
+        const updateMapViewportSize = () => {
+            const rect = container.getBoundingClientRect();
+
+            setMapViewportSize({
+                width: rect.width,
+                height: rect.height
+            });
+        };
+        const resizeObserver =
+            typeof ResizeObserver !== 'undefined'
+                ? new ResizeObserver(updateMapViewportSize)
+                : null;
+
+        updateMapViewportSize();
+        resizeObserver?.observe(container);
+        window.addEventListener('resize', updateMapViewportSize);
 
         const centerCoordinates =
             getStoreCoordinates(mapCenterStore) ||
@@ -487,6 +565,12 @@ const Home = () => {
             if (mapRef.current === map) {
                 mapRef.current = null;
             }
+
+            resizeObserver?.disconnect();
+            window.removeEventListener(
+                'resize',
+                updateMapViewportSize
+            );
         };
     }, [stores, mapCenterStore, isMobile]);
 
@@ -666,12 +750,10 @@ const Home = () => {
     );
     const popupPositionStyle =
         !isMobile && popupPoint
-            ? {
-                  left: popupPoint.x,
-                  top: popupPoint.y,
-                  transform:
-                      'translate(-50%, 48px)'
-              }
+            ? getDesktopPopupPositionStyle(
+                  popupPoint,
+                  mapViewportSize
+              )
             : null;
     const interpretedChips =
         buildInterpretedSearchChips(
@@ -700,6 +782,7 @@ const Home = () => {
                 >
                     <div
                         id="kakao-map"
+                        ref={mapContainerRef}
                         style={mapStyle}
                     />
 

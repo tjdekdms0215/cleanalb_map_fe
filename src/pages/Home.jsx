@@ -168,6 +168,27 @@ const getMapContainerPointFromStore = (map, store) => {
     };
 };
 
+const centerMapOnStore = (map, store) => {
+    if (!map || !window.kakao || !window.kakao.maps) {
+        return false;
+    }
+
+    const coordinates = getStoreCoordinates(store);
+
+    if (!coordinates) {
+        return false;
+    }
+
+    map.setCenter(
+        new window.kakao.maps.LatLng(
+            coordinates.lat,
+            coordinates.lng
+        )
+    );
+
+    return true;
+};
+
 const normalizeWorkspaceNameText = (value) => {
     if (typeof value !== 'string') {
         return '';
@@ -421,10 +442,16 @@ const Home = () => {
 
             window.kakao.maps.event.addListener(marker, 'click', () => {
                 selectedStoreRef.current = store;
+                if (!isMobile) {
+                    centerMapOnStore(map, store);
+                }
+
                 setSelectedStore(store);
-                setPopupPoint(
-                    getMapContainerPointFromStore(map, store)
-                );
+                window.requestAnimationFrame(() => {
+                    setPopupPoint(
+                        getMapContainerPointFromStore(map, store)
+                    );
+                });
             });
         });
 
@@ -1318,7 +1345,26 @@ const Home = () => {
                                         onClick={() => {
                                             selectedStoreRef.current =
                                                 store;
-                                            setSelectedStore(store)
+                                            setSelectedStore(store);
+
+                                            if (
+                                                !isMobile &&
+                                                centerMapOnStore(
+                                                    mapRef.current,
+                                                    store
+                                                )
+                                            ) {
+                                                window.requestAnimationFrame(() => {
+                                                    setPopupPoint(
+                                                        getMapContainerPointFromStore(
+                                                            mapRef.current,
+                                                            store
+                                                        )
+                                                    );
+                                                });
+                                                return;
+                                            }
+
                                             setMapCenterStore(store);
                                         }}
                                     >
